@@ -57,10 +57,10 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
     return MHD_NO;
   }
 
-  std::string helloWorld = "Hello World!";
+  std::string jsonPensieve = m_pensieve.ToJSON();
 
   auto response = MHD_create_response_from_data(
-    helloWorld.size(), const_cast<char*>(helloWorld.c_str()),
+    jsonPensieve.size(), const_cast<char*>(jsonPensieve.c_str()),
     MHD_NO/*free*/, MHD_YES/*copy*/);
   auto returnValue = MHD_queue_response(p_connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);

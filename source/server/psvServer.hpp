@@ -1,6 +1,8 @@
 #ifndef PSV_SERVER_HPP_20150318261417
 #define PSV_SERVER_HPP_20150318261417
 
+#include "psvPensieve.hpp"
+
 #include <cstdlib>
 #include <string>
 
@@ -69,6 +71,9 @@ private:
   int ConnectionHandler(MHD_Connection* p_connection,
     std::string const& p_url, std::string const& p_method,
     bool p_upload, std::string const& p_uploadData);
+
+  /// Pensieve instance
+  Pensieve m_pensieve;
 };
 
 }
