@@ -50,7 +50,28 @@ public:
    */
   std::vector<Thought>& GetThoughts();
 
+  /**
+   * Convert the pensieve into a JSON string
+   * @return JSON representation of the current data
+   */
+  std::string ToJSON() const;
+
+  /**
+   * Set pensieve's data from a JSON string
+   * @param p_json JSON representation of the data
+   */
+  void FromJSON(std::string const& p_json);
+
 private:
+  /// JSON key for thoughts
+  static std::string const JSON_THOUGHTS;
+  /// JSON key for title
+  static std::string const JSON_TITLE;
+  /// JSON key for content
+  static std::string const JSON_CONTENT;
+  /// JSON key for flags
+  static std::string const JSON_FLAGS;
+
   /// Collection of thoughts
   std::vector<Thought> m_thoughts;
 };
