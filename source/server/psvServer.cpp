@@ -35,7 +35,7 @@ void Server::Run(unsigned int p_port)
 
 int Server::ConnectionHandler(
   void* p_callbackParameters, MHD_Connection* p_connection,
-  char const* p_url, char const* p_method, char const* p_version,
+  char const* p_url, char const* p_method, char const* /*p_version*/,
   char const* p_uploadData, size_t* p_uploadDataSize,
   void** p_requestInternalData)
 {
