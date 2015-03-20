@@ -39,9 +39,6 @@ public:
   void Run(unsigned int p_port);
 
 private:
-  /// GET method
-  static std::string const GET;
-
   /**
    * Connection handler
    * @param p_callbackParameters Parameters provided at registration

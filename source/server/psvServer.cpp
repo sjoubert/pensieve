@@ -9,8 +9,6 @@
 namespace psv
 {
 
-std::string const Server::GET = "GET";
-
 Server::Server()
 {
   m_emptyResponse = MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO);
@@ -66,7 +64,7 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
   }
 
   // 405 method not allowed
-  if(p_method != GET)
+  if(p_method != MHD_HTTP_METHOD_GET)
   {
     return MHD_queue_response(
       p_connection, MHD_HTTP_METHOD_NOT_ALLOWED, m_emptyResponse);
