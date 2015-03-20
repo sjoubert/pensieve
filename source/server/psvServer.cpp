@@ -13,12 +13,12 @@ std::string const Server::GET = "GET";
 
 Server::Server()
 {
-  m_404 = MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO);
+  m_emptyResponse = MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO);
 }
 
 Server::~Server()
 {
-  MHD_destroy_response(m_404);
+  MHD_destroy_response(m_emptyResponse);
 }
 
 void Server::Run(unsigned int p_port)
@@ -61,16 +61,19 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
   // 404 not found
   if(p_url != "/")
   {
-    return MHD_queue_response(p_connection, MHD_HTTP_NOT_FOUND, m_404);
+    return MHD_queue_response(
+      p_connection, MHD_HTTP_NOT_FOUND, m_emptyResponse);
   }
 
-  if(p_method != GET || p_upload)
+  // 405 method not allowed
+  if(p_method != GET)
   {
-    return MHD_NO;
+    return MHD_queue_response(
+      p_connection, MHD_HTTP_METHOD_NOT_ALLOWED, m_emptyResponse);
   }
 
+  // 200 OK
   std::string jsonPensieve = m_pensieve.ToJSON();
-
   auto response = MHD_create_response_from_data(
     jsonPensieve.size(), const_cast<char*>(jsonPensieve.c_str()),
     MHD_NO/*free*/, MHD_YES/*copy*/);

@@ -75,8 +75,8 @@ private:
 
   /// Pensieve instance
   Pensieve m_pensieve;
-  /// 404 response
-  MHD_Response* m_404;
+  /// Empty response
+  MHD_Response* m_emptyResponse;
 };
 
 }
