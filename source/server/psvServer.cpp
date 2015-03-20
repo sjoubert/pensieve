@@ -17,7 +17,7 @@ Server::~Server() = default;
 
 void Server::Run(unsigned int p_port)
 {
-  auto daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, p_port,
+  auto daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, p_port,
       nullptr, nullptr, ConnectionHandler, this, MHD_OPTION_END);
 
   while(true)
