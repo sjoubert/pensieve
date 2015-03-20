@@ -7,6 +7,7 @@
 #include <string>
 
 struct MHD_Connection;
+struct MHD_Response;
 
 namespace psv
 {
@@ -74,6 +75,8 @@ private:
 
   /// Pensieve instance
   Pensieve m_pensieve;
+  /// 404 response
+  MHD_Response* m_404;
 };
 
 }

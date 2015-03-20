@@ -11,9 +11,15 @@ namespace psv
 
 std::string const Server::GET = "GET";
 
-Server::Server() = default;
+Server::Server()
+{
+  m_404 = MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO);
+}
 
-Server::~Server() = default;
+Server::~Server()
+{
+  MHD_destroy_response(m_404);
+}
 
 void Server::Run(unsigned int p_port)
 {
@@ -52,7 +58,13 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
   std::string const& p_url, std::string const& p_method,
   bool p_upload, std::string const& p_uploadData)
 {
-  if(p_method != GET || p_upload || p_url != "/")
+  // 404 not found
+  if(p_url != "/")
+  {
+    return MHD_queue_response(p_connection, MHD_HTTP_NOT_FOUND, m_404);
+  }
+
+  if(p_method != GET || p_upload)
   {
     return MHD_NO;
   }
