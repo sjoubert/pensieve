@@ -4,6 +4,7 @@
 #include "psvPensieve.hpp"
 
 #include <cstdlib>
+#include <map>
 #include <string>
 
 struct MHD_Connection;
@@ -48,7 +49,7 @@ private:
    * @param p_version HTTP version string
    * @param p_uploadeData Pointer to uploaded content
    * @param p_uploadeDataSize Size of the uploaded content
-   * @param p_requestState Pointer to persistent data across one request
+   * @param p_requestInternalData Pointer to persistent data across one request
    */
   static int ConnectionHandler(
     void* p_callbackParameters, MHD_Connection* p_connection,
@@ -63,15 +64,17 @@ private:
    * @param p_connection Connection to answer to
    * @param p_url Requested URL
    * @param p_method Requested method
-   * @param p_upload If there is uploaded data
    * @param p_uploadData Uploaded data if any
+   * @param p_requestInternalData Pointer to persistent data across one request
    */
   int ConnectionHandler(MHD_Connection* p_connection,
     std::string const& p_url, std::string const& p_method,
-    bool p_upload, std::string const& p_uploadData);
+    std::string const& p_uploadData, void** p_requestInternalData);
 
   /// Pensieve instance
   Pensieve m_pensieve;
+  /// Buffers
+  std::map<void*, std::string> m_buffers;
   /// Empty response
   MHD_Response* m_emptyResponse;
 };

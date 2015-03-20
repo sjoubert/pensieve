@@ -37,24 +37,20 @@ int Server::ConnectionHandler(
   void* p_callbackParameters, MHD_Connection* p_connection,
   char const* p_url, char const* p_method, char const* p_version,
   char const* p_uploadData, size_t* p_uploadDataSize,
-  void** p_requestStat)
+  void** p_requestInternalData)
 {
   auto thisServer = static_cast<Server*>(p_callbackParameters);
 
-  std::string uploadData;
-  bool upload = *p_uploadDataSize > 0;
-  if(upload)
-  {
-    uploadData = std::string(p_uploadData, *p_uploadDataSize);
-  }
+  std::string uploadData(p_uploadData, *p_uploadDataSize);
+  *p_uploadDataSize = 0;
 
   return thisServer->ConnectionHandler(p_connection, p_url, p_method,
-    upload, uploadData);
+    uploadData, p_requestInternalData);
 }
 
 int Server::ConnectionHandler(MHD_Connection* p_connection,
   std::string const& p_url, std::string const& p_method,
-  bool p_upload, std::string const& p_uploadData)
+  std::string const& p_uploadData, void** p_requestInternalData)
 {
   // 404 not found
   if(p_url != "/")
@@ -64,21 +60,53 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
   }
 
   // 405 method not allowed
-  if(p_method != MHD_HTTP_METHOD_GET)
+  if(p_method != MHD_HTTP_METHOD_GET && p_method != MHD_HTTP_METHOD_PUT)
   {
     return MHD_queue_response(
       p_connection, MHD_HTTP_METHOD_NOT_ALLOWED, m_emptyResponse);
   }
 
-  // 200 OK
-  std::string jsonPensieve = m_pensieve.ToJSON();
-  auto response = MHD_create_response_from_data(
-    jsonPensieve.size(), const_cast<char*>(jsonPensieve.c_str()),
-    MHD_NO/*free*/, MHD_YES/*copy*/);
-  auto returnValue = MHD_queue_response(p_connection, MHD_HTTP_OK, response);
-  MHD_destroy_response(response);
+  // GET
+  if(p_method == MHD_HTTP_METHOD_GET)
+  {
+    std::string jsonPensieve = m_pensieve.ToJSON();
+    auto response = MHD_create_response_from_data(
+      jsonPensieve.size(), const_cast<char*>(jsonPensieve.c_str()),
+      MHD_NO/*free*/, MHD_YES/*copy*/);
+    auto returnValue = MHD_queue_response(p_connection, MHD_HTTP_OK, response);
+    MHD_destroy_response(response);
 
-  return returnValue;
+    return returnValue;
+  }
+  else // PUT
+  {
+    // New request
+    if(*p_requestInternalData == nullptr)
+    {
+      // Buffer id, use a pointer value as UID
+      *p_requestInternalData = new int;
+      return MHD_YES;
+    }
+
+    if(p_uploadData.empty() == false)
+    {
+      // Append data to buffer
+      m_buffers[*p_requestInternalData] += p_uploadData;
+      return MHD_YES;
+    }
+    else
+    {
+      // End of data, handle PUT request
+      m_pensieve.FromJSON(m_buffers[*p_requestInternalData]);
+
+      // Clean
+      m_buffers.erase(*p_requestInternalData);
+      delete static_cast<int*>(*p_requestInternalData);
+
+      return MHD_queue_response(
+        p_connection, MHD_HTTP_CREATED, m_emptyResponse);
+    }
+  }
 }
 
 }
