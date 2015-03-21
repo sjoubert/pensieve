@@ -59,29 +59,50 @@ std::string Pensieve::ToJSON() const
   return out.str();
 }
 
-void Pensieve::FromJSON(std::string const& p_json)
+bool Pensieve::FromJSON(std::string const& p_json, Pensieve& p_pensieve)
 {
   // Build JSON
   Json::Value json;
   std::istringstream in(p_json);
-  in >> json;
+  try
+  {
+    in >> json;
+  }
+  catch(...)
+  {
+    return false;
+  }
 
   // Read JSON
-  GetThoughts().clear();
+  if(json.isMember(JSON_THOUGHTS) == false)
+  {
+    return false;
+  }
   for(auto const& jsonThought: json[JSON_THOUGHTS])
   {
-    Thought thought;
-
-    thought.SetTitle(jsonThought[JSON_TITLE].asString());
-    thought.SetContent(jsonThought[JSON_CONTENT].asString());
-
-    for(auto const& jsonFlag: jsonThought[JSON_FLAGS])
+    if(jsonThought.isMember(JSON_TITLE) &&
+      jsonThought.isMember(JSON_CONTENT) &&
+      jsonThought.isMember(JSON_FLAGS))
     {
-      thought.AddFlag(jsonFlag.asString());
-    }
+      Thought thought;
 
-    GetThoughts().push_back(thought);
+      thought.SetTitle(jsonThought[JSON_TITLE].asString());
+      thought.SetContent(jsonThought[JSON_CONTENT].asString());
+
+      for(auto const& jsonFlag: jsonThought[JSON_FLAGS])
+      {
+        thought.AddFlag(jsonFlag.asString());
+      }
+
+      p_pensieve.GetThoughts().push_back(thought);
+    }
+    else
+    {
+      return false;
+    }
   }
+
+  return true;
 }
 
 }

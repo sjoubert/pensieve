@@ -58,9 +58,13 @@ public:
 
   /**
    * Set pensieve's data from a JSON string
+   *
    * @param p_json JSON representation of the data
+   * @param p_pensieve Pensieve to fill from JSON data
+   * @return If the data has been succesfully read and set into the pensieve
+   * @note @a p_pensieve may be modified even when returning false
    */
-  void FromJSON(std::string const& p_json);
+  static bool FromJSON(std::string const& p_json, Pensieve& p_pensieve);
 
 private:
   /// JSON key for thoughts

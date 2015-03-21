@@ -97,14 +97,22 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
     else
     {
       // End of data, handle PUT request
-      m_pensieve.FromJSON(m_buffers[*p_requestInternalData]);
+      int httpCode = MHD_HTTP_CREATED;
+      Pensieve pensieve;
+      if(Pensieve::FromJSON(m_buffers[*p_requestInternalData], pensieve))
+      {
+        m_pensieve = pensieve;
+      }
+      else
+      {
+        httpCode = MHD_HTTP_BAD_REQUEST;
+      }
 
       // Clean
       m_buffers.erase(*p_requestInternalData);
       delete static_cast<int*>(*p_requestInternalData);
 
-      return MHD_queue_response(
-        p_connection, MHD_HTTP_CREATED, m_emptyResponse);
+      return MHD_queue_response(p_connection, httpCode, m_emptyResponse);
     }
   }
 }
