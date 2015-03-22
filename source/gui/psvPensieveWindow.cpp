@@ -6,7 +6,8 @@
 namespace psv
 {
 
-PensieveWindow::PensieveWindow()
+PensieveWindow::PensieveWindow(QWidget* p_parent):
+  QMainWindow(p_parent)
 {
   setWindowIcon(QIcon(":/psv/pensieve"));
 

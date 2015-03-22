@@ -15,8 +15,9 @@ class PensieveWindow:
 public:
   /**
    * Construct the window
+   * @param p_parent Parent of the new window
    */
-  PensieveWindow();
+  PensieveWindow(QWidget* p_parent = nullptr);
 
   PensieveWindow(PensieveWindow const&) = delete;
 
