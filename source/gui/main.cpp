@@ -7,7 +7,7 @@ int main(int p_argc, char** p_argv)
   QApplication app(p_argc, p_argv);
 
   psv::PensieveWindow window;
-  window.show();
+  window.showMaximized();
 
   return app.exec();
 }

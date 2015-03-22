@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/psv">
+    <!-- Pensieve image from http://iconka.com/ -->
+    <file alias="pensieve">pensieve.png</file>
+  </qresource>
+</RCC>
