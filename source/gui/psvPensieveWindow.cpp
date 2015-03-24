@@ -1,7 +1,9 @@
 #include "psvPensieveWindow.hpp"
 
 #include <QApplication>
+#include <QHeaderView>
 #include <QMenuBar>
+#include <QTableView>
 
 namespace psv
 {
@@ -20,6 +22,12 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   auto helpMenu = menuBar()->addMenu(tr("&Help"));
   auto aboutQtAction = helpMenu->addAction(tr("&About Qt"));
   connect(aboutQtAction, &QAction::triggered, this, QApplication::aboutQt);
+
+  auto tableView = new QTableView(this);
+  tableView->setModel(&m_model);
+  tableView->verticalHeader()->hide();
+  tableView->resizeColumnsToContents();
+  setCentralWidget(tableView);
 }
 
 PensieveWindow::~PensieveWindow() = default;

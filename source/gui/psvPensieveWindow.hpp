@@ -1,6 +1,8 @@
 #ifndef PSV_PENSIEVEWINDOW_HPP_20150321115845
 #define PSV_PENSIEVEWINDOW_HPP_20150321115845
 
+#include "psvPensieveModel.hpp"
+
 #include <QMainWindow>
 
 namespace psv
@@ -27,6 +29,10 @@ public:
   ~PensieveWindow();
 
   PensieveWindow& operator=(PensieveWindow const&) = delete;
+
+private:
+  /// Data mode
+  PensieveModel m_model;
 };
 
 }

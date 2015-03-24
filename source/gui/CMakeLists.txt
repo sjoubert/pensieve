@@ -6,4 +6,4 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 add_executable(qpensieve ${source_files})
-target_link_libraries(qpensieve Qt5::Widgets)
+target_link_libraries(qpensieve Qt5::Widgets pensieve)
