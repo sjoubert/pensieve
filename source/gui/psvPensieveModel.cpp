@@ -1,5 +1,7 @@
 #include "psvPensieveModel.hpp"
 
+#include <QStringList>
+
 namespace psv
 {
 

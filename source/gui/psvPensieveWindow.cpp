@@ -16,12 +16,13 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   auto fileMenu = menuBar()->addMenu(tr("&File"));
   auto quitAction = fileMenu->addAction(tr("&Quit"));
   quitAction->setShortcut(QKeySequence::Quit);
-  connect(quitAction, &QAction::triggered,
-    QCoreApplication::instance(), &QCoreApplication::quit);
+  connect(quitAction, SIGNAL(triggered()),
+    QCoreApplication::instance(), SLOT(quit()));
 
   auto helpMenu = menuBar()->addMenu(tr("&Help"));
   auto aboutQtAction = helpMenu->addAction(tr("&About Qt"));
-  connect(aboutQtAction, &QAction::triggered, this, QApplication::aboutQt);
+  connect(aboutQtAction, SIGNAL(triggered()),
+    QCoreApplication::instance(), SLOT(aboutQt()));
 
   auto tableView = new QTableView(this);
   tableView->setModel(&m_model);
