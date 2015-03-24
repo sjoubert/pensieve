@@ -4,6 +4,7 @@
 #include "psvPensieveModel.hpp"
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 
 namespace psv
 {
@@ -14,6 +15,8 @@ namespace psv
 class PensieveWindow:
   public QMainWindow
 {
+  Q_OBJECT
+
 public:
   /**
    * Construct the window
@@ -29,6 +32,24 @@ public:
   ~PensieveWindow();
 
   PensieveWindow& operator=(PensieveWindow const&) = delete;
+
+protected:
+  /**
+   * Handle close event to toggle visibility instead of closing the window
+   * @param p_event Close event to handle
+   */
+  void closeEvent(QCloseEvent* p_event) override;
+
+private Q_SLOTS:
+  /**
+   * Toggle window visibility based on the current status
+   */
+  void ToggleVisibility();
+
+  /**
+   * Handle systray icon activation
+   */
+  void SystrayActivated(QSystemTrayIcon::ActivationReason p_reason);
 
 private:
   /// Data mode
