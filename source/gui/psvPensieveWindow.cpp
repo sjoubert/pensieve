@@ -4,6 +4,7 @@
 #include <QCloseEvent>
 #include <QHeaderView>
 #include <QMenuBar>
+#include <QPainter>
 #include <QSystemTrayIcon>
 #include <QTableView>
 
@@ -35,11 +36,16 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   tableView->resizeColumnsToContents();
   setCentralWidget(tableView);
 
-  auto systray = new QSystemTrayIcon(windowIcon(), this);
-  systray->setContextMenu(fileMenu);
-  systray->show();
-  connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+  m_systrayIcon.setContextMenu(fileMenu);
+  connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
     this, SLOT(SystrayActivated(QSystemTrayIcon::ActivationReason)));
+  UpdateSystrayIcon();
+  m_systrayIcon.show();
+
+  connect(&m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+    this, SLOT(UpdateSystrayIcon()));
+  connect(&m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+    this, SLOT(UpdateSystrayIcon()));
 }
 
 PensieveWindow::~PensieveWindow() = default;
@@ -62,6 +68,41 @@ void PensieveWindow::SystrayActivated(
   {
     ToggleVisibility();
   }
+}
+
+void PensieveWindow::UpdateSystrayIcon()
+{
+  QPixmap image(":/psv/pensieve");
+
+  QPainter painter(&image);
+  painter.setPen(Qt::red); // Red
+
+  auto number = QString::number(m_model.rowCount());
+  auto newFont = painter.font();
+  newFont.setBold(true); // Bold
+
+  // Compute a size that can handle the text
+  newFont.setPixelSize(image.height());
+  bool foundSize = false;
+  while(foundSize == false)
+  {
+    auto size = QFontMetrics(newFont).size(Qt::TextSingleLine, number);
+    size *= 1.25; // Avoid covering the whole image
+    if((size.height() <= image.height() && size.width() <= image.height()) ||
+      newFont.pixelSize() <= 0)
+    {
+      foundSize = true;
+    }
+    else
+    {
+      newFont.setPixelSize(newFont.pixelSize() - 1);
+    }
+  }
+  painter.setFont(newFont);
+
+  painter.drawText(image.rect(), Qt::AlignHCenter | Qt::AlignBottom, number);
+
+  m_systrayIcon.setIcon(QIcon(image));
 }
 
 }

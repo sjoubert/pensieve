@@ -51,9 +51,16 @@ private Q_SLOTS:
    */
   void SystrayActivated(QSystemTrayIcon::ActivationReason p_reason);
 
+  /**
+   * Update systray icon with the number of thoughts
+   */
+  void UpdateSystrayIcon();
+
 private:
   /// Data mode
   PensieveModel m_model;
+  /// Systray icon
+  QSystemTrayIcon m_systrayIcon;
 };
 
 }
