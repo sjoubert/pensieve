@@ -74,33 +74,36 @@ void PensieveWindow::UpdateSystrayIcon()
 {
   QPixmap image(":/psv/pensieve");
 
-  QPainter painter(&image);
-  painter.setPen(Qt::red); // Red
-
-  auto number = QString::number(m_model.rowCount());
-  auto newFont = painter.font();
-  newFont.setBold(true); // Bold
-
-  // Compute a size that can handle the text
-  newFont.setPixelSize(image.height());
-  bool foundSize = false;
-  while(foundSize == false)
+  if(m_model.rowCount() > 0)
   {
-    auto size = QFontMetrics(newFont).size(Qt::TextSingleLine, number);
-    size *= 1.25; // Avoid covering the whole image
-    if((size.height() <= image.height() && size.width() <= image.height()) ||
-      newFont.pixelSize() <= 0)
-    {
-      foundSize = true;
-    }
-    else
-    {
-      newFont.setPixelSize(newFont.pixelSize() - 1);
-    }
-  }
-  painter.setFont(newFont);
+    QPainter painter(&image);
+    painter.setPen(Qt::red); // Red
 
-  painter.drawText(image.rect(), Qt::AlignHCenter | Qt::AlignBottom, number);
+    auto number = QString::number(m_model.rowCount());
+    auto newFont = painter.font();
+    newFont.setBold(true); // Bold
+
+    // Compute a size that can handle the text
+    newFont.setPixelSize(image.height());
+    bool foundSize = false;
+    while(foundSize == false)
+    {
+      auto size = QFontMetrics(newFont).size(Qt::TextSingleLine, number);
+      size *= 1.25; // Avoid covering the whole image
+      if((size.height() <= image.height() && size.width() <= image.height()) ||
+        newFont.pixelSize() <= 0)
+      {
+        foundSize = true;
+      }
+      else
+      {
+        newFont.setPixelSize(newFont.pixelSize() - 1);
+      }
+    }
+    painter.setFont(newFont);
+
+    painter.drawText(image.rect(), Qt::AlignHCenter | Qt::AlignBottom, number);
+  }
 
   m_systrayIcon.setIcon(QIcon(image));
 }
