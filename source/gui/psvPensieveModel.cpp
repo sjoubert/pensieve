@@ -8,21 +8,27 @@ namespace psv
 PensieveModel::PensieveModel(QObject* p_parent):
   QAbstractTableModel(p_parent)
 {
-  Thought thought;
-  thought.SetTitle("toto");
-  thought.SetContent("l'escargot qui porte sa maison sur le dos");
-  thought.AddFlag("animal");
-  thought.AddFlag("joke");
-  m_pensieve.GetThoughts().push_back(thought);
-  thought = Thought();
-  thought.SetTitle("meuh");
-  thought.SetContent("la vache à lait");
-  thought.AddFlag("animal");
-  thought.AddFlag("wtf");
-  m_pensieve.GetThoughts().push_back(thought);
 }
 
 PensieveModel::~PensieveModel() = default;
+
+Pensieve const& PensieveModel::GetPensieve() const
+{
+  return m_pensieve;
+}
+
+void PensieveModel::SetPensieve(Pensieve const& p_pensieve)
+{
+  // Clear data
+  beginRemoveRows(QModelIndex(), 0, m_pensieve.GetThoughts().size() - 1);
+  m_pensieve = Pensieve();
+  endRemoveRows();
+
+  // Set new data
+  beginInsertRows(QModelIndex(), 0, p_pensieve.GetThoughts().size() - 1);
+  m_pensieve = p_pensieve;
+  endInsertRows();
+}
 
 int PensieveModel::rowCount(QModelIndex const& p_parent) const
 {

@@ -33,7 +33,6 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   auto tableView = new QTableView(this);
   tableView->setModel(&m_model);
   tableView->verticalHeader()->hide();
-  tableView->resizeColumnsToContents();
   setCentralWidget(tableView);
 
   m_systrayIcon.setContextMenu(fileMenu);
@@ -46,6 +45,22 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     this, SLOT(UpdateSystrayIcon()));
   connect(&m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
     this, SLOT(UpdateSystrayIcon()));
+
+  // Add temporary fake data
+  Pensieve pensieve;
+  Thought thought;
+  thought.SetTitle("toto");
+  thought.SetContent("l'escargot qui porte sa maison sur le dos");
+  thought.AddFlag("animal");
+  thought.AddFlag("joke");
+  pensieve.GetThoughts().push_back(thought);
+  thought = Thought();
+  thought.SetTitle("meuh");
+  thought.SetContent("la vache qui produit du lait");
+  thought.AddFlag("animal");
+  thought.AddFlag("wtf");
+  pensieve.GetThoughts().push_back(thought);
+  m_model.SetPensieve(pensieve);
 }
 
 PensieveWindow::~PensieveWindow() = default;

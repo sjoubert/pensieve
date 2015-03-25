@@ -31,6 +31,18 @@ public:
   PensieveModel& operator=(PensieveModel const&) = delete;
 
   /**
+   * Get the underlying pensieve data
+   * @return Current pensieve data
+   */
+  Pensieve const& GetPensieve() const;
+
+  /**
+   * Set the pensieve data
+   * @param p_pensieve Data to set in the model
+   */
+  void SetPensieve(Pensieve const& p_pensieve);
+
+  /**
    * Get the number of row in the model
    * @param p_parent Parent element whose row count to return
    * @return Current number of row
