@@ -1,7 +1,7 @@
 #ifndef PSV_PENSIEVEWINDOW_HPP_20150321115845
 #define PSV_PENSIEVEWINDOW_HPP_20150321115845
 
-#include "psvPensieveModel.hpp"
+#include "psvPensieveWidget.hpp"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -58,7 +58,7 @@ private Q_SLOTS:
 
 private:
   /// Data mode
-  PensieveModel m_model;
+  PensieveWidget* m_pensieveWidget;
   /// Systray icon
   QSystemTrayIcon m_systrayIcon;
 };

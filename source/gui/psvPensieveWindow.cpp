@@ -1,12 +1,13 @@
 #include "psvPensieveWindow.hpp"
 
+#include "psvPensieve.hpp"
+
 #include <QApplication>
 #include <QCloseEvent>
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QPainter>
 #include <QSystemTrayIcon>
-#include <QTableView>
 
 namespace psv
 {
@@ -30,10 +31,8 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   connect(aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
 
-  auto tableView = new QTableView(this);
-  tableView->setModel(&m_model);
-  tableView->verticalHeader()->hide();
-  setCentralWidget(tableView);
+  m_pensieveWidget = new PensieveWidget;
+  setCentralWidget(m_pensieveWidget);
 
   m_systrayIcon.setContextMenu(fileMenu);
   connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -41,9 +40,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   UpdateSystrayIcon();
   m_systrayIcon.show();
 
-  connect(&m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-    this, SLOT(UpdateSystrayIcon()));
-  connect(&m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+  connect(m_pensieveWidget, SIGNAL(Modified()),
     this, SLOT(UpdateSystrayIcon()));
 
   // Add temporary fake data
@@ -54,13 +51,14 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   thought.AddFlag("animal");
   thought.AddFlag("joke");
   pensieve.GetThoughts().push_back(thought);
+  for(int i = 0; i < 9; ++i){
   thought = Thought();
   thought.SetTitle("meuh");
   thought.SetContent("la vache qui produit du lait");
   thought.AddFlag("animal");
   thought.AddFlag("wtf");
-  pensieve.GetThoughts().push_back(thought);
-  m_model.SetPensieve(pensieve);
+  pensieve.GetThoughts().push_back(thought);}
+  m_pensieveWidget->SetPensieve(pensieve);
 }
 
 PensieveWindow::~PensieveWindow() = default;
@@ -89,12 +87,13 @@ void PensieveWindow::UpdateSystrayIcon()
 {
   QPixmap image(":/psv/pensieve");
 
-  if(m_model.rowCount() > 0)
+  auto count = m_pensieveWidget->GetPensieve().GetThoughts().size();
+  if(count > 0)
   {
     QPainter painter(&image);
     painter.setPen(Qt::red); // Red
 
-    auto number = QString::number(m_model.rowCount());
+    auto number = QString::number(count);
     auto newFont = painter.font();
     newFont.setBold(true); // Bold
 
