@@ -91,6 +91,13 @@ void PensieveWidget::resizeEvent(QResizeEvent* p_event)
   LayoutWidgets();
 }
 
+void PensieveWidget::CreateThought()
+{
+  auto currentPensieve = GetPensieve();
+  currentPensieve.GetThoughts().emplace_back();
+  SetPensieve(currentPensieve);
+}
+
 void PensieveWidget::StartEdition(QWidget* p_widget)
 {
   for(auto widget: m_thoughtWidgets)

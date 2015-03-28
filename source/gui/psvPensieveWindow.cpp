@@ -17,7 +17,15 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 {
   setWindowIcon(QIcon(":/psv/pensieve"));
 
+  m_pensieveWidget = new PensieveWidget;
+  setCentralWidget(m_pensieveWidget);
+
   auto fileMenu = menuBar()->addMenu(tr("&File"));
+  auto addThoughtAction = fileMenu->addAction(tr("&Add thought"));
+  addThoughtAction->setShortcut(QKeySequence::New);
+  connect(addThoughtAction, SIGNAL(triggered()),
+    m_pensieveWidget, SLOT(CreateThought()));
+  fileMenu->addSeparator();
   auto toggleAction = fileMenu->addAction(tr("&Toggle visibility"));
   connect(toggleAction, SIGNAL(triggered()), this, SLOT(ToggleVisibility()));
   fileMenu->addSeparator();
@@ -31,10 +39,12 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   connect(aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
 
-  m_pensieveWidget = new PensieveWidget;
-  setCentralWidget(m_pensieveWidget);
+  auto systrayMenu = new QMenu;
+  systrayMenu->addAction(toggleAction);
+  systrayMenu->addSeparator();
+  systrayMenu->addAction(quitAction);
 
-  m_systrayIcon.setContextMenu(fileMenu);
+  m_systrayIcon.setContextMenu(systrayMenu);
   connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
     this, SLOT(SystrayActivated(QSystemTrayIcon::ActivationReason)));
   UpdateSystrayIcon();

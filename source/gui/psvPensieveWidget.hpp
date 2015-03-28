@@ -53,6 +53,12 @@ public:
    */
   void resizeEvent(QResizeEvent* p_event) override;
 
+public Q_SLOTS:
+  /**
+   * Create a new empty thought
+   */
+  void CreateThought();
+
 Q_SIGNALS:
   /**
    * Emitted when data have been modified
