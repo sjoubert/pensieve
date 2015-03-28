@@ -27,6 +27,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     m_pensieveWidget, SLOT(CreateThought()));
   fileMenu->addSeparator();
   auto toggleAction = fileMenu->addAction(tr("&Toggle visibility"));
+  toggleAction->setShortcut(QKeySequence::Close);
   connect(toggleAction, SIGNAL(triggered()), this, SLOT(ToggleVisibility()));
   fileMenu->addSeparator();
   auto quitAction = fileMenu->addAction(tr("&Quit"));
