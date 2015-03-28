@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
+#include <QMenu>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
@@ -35,6 +36,8 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   textsLayout->addWidget(m_content);
 
   m_flags = new QListWidget;
+  m_flags->setContextMenuPolicy(Qt::CustomContextMenu);
+  m_flags->setSelectionMode(QAbstractItemView::ExtendedSelection);
   dataLayout->addWidget(m_flags);
   dataLayout->setStretch(1, 1);
 
@@ -49,6 +52,10 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   m_saveButton = new QPushButton(tr("Save"));
   buttonLayout->addWidget(m_saveButton);
 
+  m_contextMenu = new QMenu(this);
+  auto addFlagAction = m_contextMenu->addAction(tr("Add"));
+  m_removeFlagsAction = m_contextMenu->addAction(tr("Remove"));
+
   SetDisplayMode();
 
   connect(m_editButton, SIGNAL(clicked()), this, SLOT(SetEditMode()));
@@ -56,6 +63,10 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   connect(m_saveButton, SIGNAL(clicked()), this, SLOT(SetDisplayMode()));
   connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(EditionEnded()));
   connect(m_deleteButton, SIGNAL(clicked()), this, SIGNAL(DeleteRequested()));
+  connect(m_flags, SIGNAL(customContextMenuRequested(QPoint)),
+    this, SLOT(DisplayContextMenu(QPoint)));
+  connect(addFlagAction, SIGNAL(triggered()), this, SLOT(AddFlag()));
+  connect(m_removeFlagsAction, SIGNAL(triggered()), this, SLOT(RemoveFlags()));
 }
 
 ThoughtWidget::~ThoughtWidget() = default;
@@ -98,6 +109,53 @@ void ThoughtWidget::SetDisplayMode(bool p_displayMode)
   m_deleteButton->setVisible(p_displayMode);
   m_editButton->setVisible(p_displayMode);
   m_saveButton->setHidden(p_displayMode);
+
+  if(m_flags->count() > 0)
+  {
+    auto newFlags = m_flags->item(0)->flags();
+    if(p_displayMode)
+    {
+      newFlags &= ~Qt::ItemIsEditable;
+    }
+    else
+    {
+      newFlags |= Qt::ItemIsEditable;
+    }
+
+    for(auto i = 0; i < m_flags->count(); ++i)
+    {
+      m_flags->item(i)->setFlags(newFlags);
+    }
+  }
+}
+
+void ThoughtWidget::DisplayContextMenu(QPoint const& p_position)
+{
+  Q_UNUSED(p_position);
+
+  // Edit mode
+  if(m_saveButton->isVisible())
+  {
+    m_removeFlagsAction->setDisabled(m_flags->selectedItems().empty());
+    m_contextMenu->exec(QCursor::pos());
+  }
+}
+
+void ThoughtWidget::AddFlag()
+{
+  auto newItem = new QListWidgetItem(tr("<new flag>"));
+  newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
+  m_flags->addItem(newItem);
+  m_flags->editItem(newItem);
+}
+
+void ThoughtWidget::RemoveFlags()
+{
+  // Just delete the items the list widget will be cleaned automatically
+  for(auto toRemove: m_flags->selectedItems())
+  {
+    delete toRemove;
+  }
 }
 
 }

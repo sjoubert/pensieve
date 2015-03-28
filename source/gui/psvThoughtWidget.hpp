@@ -8,6 +8,7 @@
 class QLabel;
 class QLineEdit;
 class QListWidget;
+class QMenu;
 class QPlainTextEdit;
 class QPushButton;
 
@@ -79,6 +80,22 @@ private Q_SLOTS:
    */
   void SetDisplayMode(bool p_displayMode = true);
 
+  /**
+   * Display custom context menu for the flags widget
+   * @param p_position Requested position of the menu
+   */
+  void DisplayContextMenu(QPoint const& p_position);
+
+  /**
+   * Add a new flag to the flag list
+   */
+  void AddFlag();
+
+  /**
+   * Remove the selected flags from the flag list
+   */
+  void RemoveFlags();
+
 private:
   /// Title edit widget
   QLineEdit* m_title;
@@ -92,6 +109,10 @@ private:
   QPushButton* m_editButton;
   /// Save button
   QPushButton* m_saveButton;
+  /// Flags context menu
+  QMenu* m_contextMenu;
+  /// Remove flags action of the context menu
+  QAction* m_removeFlagsAction;
 };
 
 }
