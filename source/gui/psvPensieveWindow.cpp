@@ -53,23 +53,6 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 
   connect(m_pensieveWidget, SIGNAL(Modified()),
     this, SLOT(UpdateSystrayIcon()));
-
-  // Add temporary fake data
-  Pensieve pensieve;
-  Thought thought;
-  thought.SetTitle("toto");
-  thought.SetContent("l'escargot qui porte sa maison sur le dos");
-  thought.AddFlag("animal");
-  thought.AddFlag("joke");
-  pensieve.GetThoughts().push_back(thought);
-  for(int i = 0; i < 9; ++i){
-  thought = Thought();
-  thought.SetTitle("meuh");
-  thought.SetContent("la vache qui produit du lait");
-  thought.AddFlag("animal");
-  thought.AddFlag("wtf");
-  pensieve.GetThoughts().push_back(thought);}
-  m_pensieveWidget->SetPensieve(pensieve);
 }
 
 PensieveWindow::~PensieveWindow() = default;
