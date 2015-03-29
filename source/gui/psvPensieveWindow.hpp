@@ -2,11 +2,17 @@
 #define PSV_PENSIEVEWINDOW_HPP_20150321115845
 
 #include "psvPensieveWidget.hpp"
-#include "ui_psvPensieveWindow.h"
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
+
+#include <memory>
+
+namespace Ui
+{
+class PensieveWindow;
+}
 
 namespace psv
 {
@@ -82,7 +88,7 @@ private:
   void SetReadOnly(bool p_readOnly);
 
   /// Widget UI
-  Ui::PensieveWindow m_ui;
+  std::unique_ptr<Ui::PensieveWindow> m_ui;
   /// Main widget
   PensieveWidget m_pensieveWidget;
   /// Systray icon

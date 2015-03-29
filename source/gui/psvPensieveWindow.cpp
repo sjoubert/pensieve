@@ -1,6 +1,7 @@
 #include "psvPensieveWindow.hpp"
 
 #include "psvPensieve.hpp"
+#include "ui_psvPensieveWindow.h"
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -14,45 +15,47 @@ namespace psv
 {
 
 PensieveWindow::PensieveWindow(QWidget* p_parent):
-  QMainWindow(p_parent)
+  QMainWindow(p_parent),
+  m_ui(std::make_unique<Ui::PensieveWindow>())
 {
-  m_ui.setupUi(this);
+  m_ui->setupUi(this);
   setWindowIcon(QIcon(":/psv/pensieve"));
   setCentralWidget(&m_pensieveWidget);
 
-  m_ui.m_addThoughtAction->setIcon(
+  m_ui->m_addThoughtAction->setIcon(
     style()->standardIcon(QStyle::SP_FileDialogNewFolder));
-  m_ui.m_downloadDataAction->setIcon(
+  m_ui->m_downloadDataAction->setIcon(
     style()->standardIcon(QStyle::SP_ArrowDown));
-  m_ui.m_uploadDataAction->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
-  m_ui.m_quitAction->setIcon(
+  m_ui->m_uploadDataAction->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
+  m_ui->m_quitAction->setIcon(
     style()->standardIcon(QStyle::SP_DialogCloseButton));
-  m_ui.m_aboutQtAction->setIcon(
+  m_ui->m_aboutQtAction->setIcon(
     QIcon(":/qt-project.org/qmessagebox/images/qtlogo-64.png"));
 
-  m_ui.m_addThoughtAction->setShortcut(QKeySequence::New);
-  m_ui.m_toggleVisibilityAction->setShortcut(QKeySequence::Close);
-  m_ui.m_quitAction->setShortcut(QKeySequence::Quit);
+  m_ui->m_addThoughtAction->setShortcut(QKeySequence::New);
+  m_ui->m_toggleVisibilityAction->setShortcut(QKeySequence::Close);
+  m_ui->m_quitAction->setShortcut(QKeySequence::Quit);
 
   auto systrayMenu = new QMenu;
-  systrayMenu->addAction(m_ui.m_toggleVisibilityAction);
+  systrayMenu->addAction(m_ui->m_toggleVisibilityAction);
   systrayMenu->addSeparator();
-  systrayMenu->addAction(m_ui.m_quitAction);
+  systrayMenu->addAction(m_ui->m_quitAction);
 
   m_systrayIcon.setContextMenu(systrayMenu);
   UpdateSystrayIcon();
   m_systrayIcon.show();
 
-  connect(m_ui.m_addThoughtAction, SIGNAL(triggered()),
+  connect(m_ui->m_addThoughtAction, SIGNAL(triggered()),
     &m_pensieveWidget, SLOT(CreateThought()));
-  connect(m_ui.m_downloadDataAction, SIGNAL(triggered()), SLOT(DownloadData()));
-  connect(m_ui.m_uploadDataAction, SIGNAL(triggered()),
+  connect(m_ui->m_downloadDataAction, SIGNAL(triggered()),
+    SLOT(DownloadData()));
+  connect(m_ui->m_uploadDataAction, SIGNAL(triggered()),
     SLOT(UploadData()));
-  connect(m_ui.m_toggleVisibilityAction, SIGNAL(triggered()),
+  connect(m_ui->m_toggleVisibilityAction, SIGNAL(triggered()),
     SLOT(ToggleVisibility()));
-  connect(m_ui.m_quitAction, SIGNAL(triggered()),
+  connect(m_ui->m_quitAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(quit()));
-  connect(m_ui.m_aboutQtAction, SIGNAL(triggered()),
+  connect(m_ui->m_aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
   connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
     SLOT(SystrayActivated(QSystemTrayIcon::ActivationReason)));
@@ -153,9 +156,9 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
 void PensieveWindow::SetReadOnly(bool p_readOnly)
 {
   m_pensieveWidget.setDisabled(p_readOnly);
-  m_ui.m_addThoughtAction->setDisabled(p_readOnly);
-  m_ui.m_downloadDataAction->setDisabled(p_readOnly);
-  m_ui.m_uploadDataAction->setDisabled(p_readOnly);
+  m_ui->m_addThoughtAction->setDisabled(p_readOnly);
+  m_ui->m_downloadDataAction->setDisabled(p_readOnly);
+  m_ui->m_uploadDataAction->setDisabled(p_readOnly);
 }
 
 }

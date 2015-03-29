@@ -2,17 +2,16 @@
 
 #include "psvPensieve.hpp"
 #include "psvThoughtWidget.hpp"
-
-#include <QSignalMapper>
-#include <QGridLayout>
+#include "ui_psvPensieveWidget.h"
 
 namespace psv
 {
 
 PensieveWidget::PensieveWidget(QWidget* p_parent):
-  QScrollArea(p_parent)
+  QScrollArea(p_parent),
+  m_ui(std::make_unique<Ui::PensieveWidget>())
 {
-  m_ui.setupUi(this);
+  m_ui->setupUi(this);
 
   connect(&m_startEditionMapper, SIGNAL(mapped(QWidget*)),
     SLOT(StartEdition(QWidget*)));
@@ -128,7 +127,7 @@ void PensieveWidget::LayoutWidgets()
       std::max(width() / m_thoughtWidgets[0]->sizeHint().width(), 1);
     for(auto widget: m_thoughtWidgets)
     {
-      m_ui.m_gridLayout->addWidget(widget, i / columnNumber, i % columnNumber);
+      m_ui->m_gridLayout->addWidget(widget, i / columnNumber, i % columnNumber);
       ++i;
     }
   }

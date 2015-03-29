@@ -2,10 +2,17 @@
 #define PSV_THOUGHTWIDGET_HPP_20150325165657
 
 #include "psvThought.hpp"
-#include "ui_psvThoughtWidget.h"
 
 #include <QWidget>
+
+#include <memory>
+
 class QMenu;
+
+namespace Ui
+{
+class ThoughtWidget;
+}
 
 namespace psv
 {
@@ -93,7 +100,7 @@ private Q_SLOTS:
 
 private:
   /// Widget UI
-  Ui::ThoughtWidget m_ui;
+  std::unique_ptr<Ui::ThoughtWidget> m_ui;
   /// Flags context menu
   QMenu* m_contextMenu;
 };

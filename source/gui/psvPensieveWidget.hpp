@@ -1,10 +1,15 @@
 #ifndef PSV_PENSIEVEWIDGET_HPP_20150325182530
 #define PSV_PENSIEVEWIDGET_HPP_20150325182530
 
-#include "ui_psvPensieveWidget.h"
-
 #include <QScrollArea>
 #include <QSignalMapper>
+
+#include <memory>
+
+namespace Ui
+{
+class PensieveWidget;
+}
 
 namespace psv
 {
@@ -90,7 +95,7 @@ private:
   void LayoutWidgets();
 
   /// Widget UI
-  Ui::PensieveWidget m_ui;
+  std::unique_ptr<Ui::PensieveWidget> m_ui;
   /// Thought widgets container
   std::vector<ThoughtWidget*> m_thoughtWidgets;
   /// Mapper for edition start signal
