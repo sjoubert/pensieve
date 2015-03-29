@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ThoughtWidget</class>
+ <widget class="QWidget" name="ThoughtWidget">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="m_groupBox">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QHBoxLayout" name="m_dataLayout" stretch="3,1">
+        <item>
+         <layout class="QVBoxLayout" name="m_textsLayout">
+          <item>
+           <widget class="QLineEdit" name="m_title"/>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="m_content"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="m_flags">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="m_buttonsLayout">
+        <item>
+         <spacer name="m_buttonSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="m_deleteButton">
+          <property name="text">
+           <string>Delete</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="m_editButton">
+          <property name="text">
+           <string>Edit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="m_saveButton">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+  <action name="m_addFlagAction">
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </action>
+  <action name="m_removeFlagsAction">
+   <property name="text">
+    <string>Remove</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>m_title</tabstop>
+  <tabstop>m_content</tabstop>
+  <tabstop>m_flags</tabstop>
+  <tabstop>m_deleteButton</tabstop>
+  <tabstop>m_editButton</tabstop>
+  <tabstop>m_saveButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -2,15 +2,10 @@
 #define PSV_THOUGHTWIDGET_HPP_20150325165657
 
 #include "psvThought.hpp"
+#include "ui_psvThoughtWidget.h"
 
 #include <QWidget>
-
-class QLabel;
-class QLineEdit;
-class QListWidget;
 class QMenu;
-class QPlainTextEdit;
-class QPushButton;
 
 namespace psv
 {
@@ -97,22 +92,10 @@ private Q_SLOTS:
   void RemoveFlags();
 
 private:
-  /// Title edit widget
-  QLineEdit* m_title;
-  /// Content edit widget
-  QPlainTextEdit* m_content;
-  /// Flags widget
-  QListWidget* m_flags;
-  /// Remove button
-  QPushButton* m_deleteButton;
-  /// Edit button
-  QPushButton* m_editButton;
-  /// Save button
-  QPushButton* m_saveButton;
+  /// Widget UI
+  Ui::ThoughtWidget m_ui;
   /// Flags context menu
   QMenu* m_contextMenu;
-  /// Remove flags action of the context menu
-  QAction* m_removeFlagsAction;
 };
 
 }

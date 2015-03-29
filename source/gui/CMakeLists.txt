@@ -11,9 +11,11 @@ else()
   set(qtLibrary Qt4::QtGui Qt4::QtNetwork)
 endif()
 
-file(GLOB_RECURSE source_files "*.?pp" "*.qrc")
+file(GLOB_RECURSE source_files "*.?pp" "*.ui" "*.qrc")
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(qpensieve ${source_files})
 target_link_libraries(qpensieve ${qtLibrary} pensieve)
