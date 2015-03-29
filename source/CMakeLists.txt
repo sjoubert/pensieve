@@ -1,5 +1,8 @@
 include(CMakeDependentOption)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/psvConfigure.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/psvConfigure.hpp @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 option(PSV_BUILD_LIBRARY "Build pensieve library" ON)
 if(PSV_BUILD_LIBRARY)
   message(STATUS "Configuring library")

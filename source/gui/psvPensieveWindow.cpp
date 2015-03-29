@@ -1,11 +1,13 @@
 #include "psvPensieveWindow.hpp"
 
+#include "psvConfigure.hpp"
 #include "psvPensieve.hpp"
 #include "psvSettingsDialog.hpp"
 #include "ui_psvPensieveWindow.h"
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QMessageBox>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPainter>
@@ -57,6 +59,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     SLOT(ToggleVisibility()));
   connect(m_ui->m_quitAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(quit()));
+  connect(m_ui->m_aboutAction, SIGNAL(triggered()), SLOT(About()));
   connect(m_ui->m_aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
   connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -91,6 +94,12 @@ void PensieveWindow::DisplaySettings()
 void PensieveWindow::ToggleVisibility()
 {
   setHidden(isVisible());
+}
+
+void PensieveWindow::About()
+{
+  QMessageBox::about(this, tr("About"),
+    tr("Version %1").arg(QString::fromStdString(PENSIEVE_VERSION)));
 }
 
 void PensieveWindow::SystrayActivated(

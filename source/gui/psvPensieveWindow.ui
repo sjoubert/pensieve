@@ -37,6 +37,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="m_aboutAction"/>
     <addaction name="m_aboutQtAction"/>
    </widget>
    <addaction name="m_fileMenu"/>
@@ -87,6 +88,11 @@
   <action name="m_settingsAction">
    <property name="text">
     <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="m_aboutAction">
+   <property name="text">
+    <string>&amp;About</string>
    </property>
   </action>
  </widget>

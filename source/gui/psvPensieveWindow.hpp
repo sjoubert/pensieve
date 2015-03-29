@@ -61,6 +61,11 @@ private Q_SLOTS:
   void ToggleVisibility();
 
   /**
+   * Display the about dialog
+   */
+  void About();
+
+  /**
    * Handle systray icon activation
    */
   void SystrayActivated(QSystemTrayIcon::ActivationReason p_reason);

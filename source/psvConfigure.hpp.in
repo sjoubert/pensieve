@@ -1,0 +1,13 @@
+#ifndef PSV_CONFIGURE_HPP_20150329223725
+#define PSV_CONFIGURE_HPP_20150329223725
+
+#include <string>
+
+namespace psv
+{
+
+static std::string const PENSIEVE_VERSION = "@PROJECT_VERSION@";
+
+}
+
+#endif
