@@ -4,7 +4,10 @@
 #include "psvPensieveWidget.hpp"
 
 #include <QMainWindow>
+#include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
+
+class QAction;
 
 namespace psv
 {
@@ -56,11 +59,41 @@ private Q_SLOTS:
    */
   void UpdateSystrayIcon();
 
+  /**
+   * Get data from server
+   */
+  void DownloadData();
+
+  /**
+   * Send data to server
+   */
+  void UploadData();
+
+  /**
+   * Handle end of an HTTP request
+   * @param p_reply Network reply that finished
+   */
+  void EndRequest(QNetworkReply* p_reply);
+
 private:
+  /**
+   * Set the read only mode of data
+   * @param p_readOnly If it should be read only, editable otherwise
+   */
+  void SetReadOnly(bool p_readOnly);
+
   /// Data mode
   PensieveWidget* m_pensieveWidget;
   /// Systray icon
   QSystemTrayIcon m_systrayIcon;
+  /// Network manager
+  QNetworkAccessManager m_networkManager;
+  /// Add thought
+  QAction* m_addThoughtAction;
+  /// Download data
+  QAction* m_downloadDataAction;
+  /// Upload data
+  QAction* m_uploadDataAction;
 };
 
 }

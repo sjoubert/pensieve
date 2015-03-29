@@ -6,8 +6,13 @@
 #include <QCloseEvent>
 #include <QHeaderView>
 #include <QMenuBar>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QPainter>
 #include <QSystemTrayIcon>
+#include <QToolBar>
+
+#include <thread>
 
 namespace psv
 {
@@ -21,10 +26,16 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   setCentralWidget(m_pensieveWidget);
 
   auto fileMenu = menuBar()->addMenu(tr("&File"));
-  auto addThoughtAction = fileMenu->addAction(tr("&Add thought"));
-  addThoughtAction->setShortcut(QKeySequence::New);
-  connect(addThoughtAction, SIGNAL(triggered()),
+  m_addThoughtAction = fileMenu->addAction(tr("&Add thought"));
+  m_addThoughtAction->setShortcut(QKeySequence::New);
+  connect(m_addThoughtAction, SIGNAL(triggered()),
     m_pensieveWidget, SLOT(CreateThought()));
+  fileMenu->addSeparator();
+  m_downloadDataAction = fileMenu->addAction(tr("&Download"));
+  connect(m_downloadDataAction, SIGNAL(triggered()),
+    this, SLOT(DownloadData()));
+  m_uploadDataAction = fileMenu->addAction(tr("&Upload"));
+  connect(m_uploadDataAction, SIGNAL(triggered()), this, SLOT(UploadData()));
   fileMenu->addSeparator();
   auto toggleAction = fileMenu->addAction(tr("&Toggle visibility"));
   toggleAction->setShortcut(QKeySequence::Close);
@@ -40,6 +51,13 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   connect(aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
 
+  auto toolBar = new QToolBar(fileMenu->title());
+  addToolBar(Qt::LeftToolBarArea, toolBar);
+  toolBar->addAction(m_addThoughtAction);
+  toolBar->addSeparator();
+  toolBar->addAction(m_downloadDataAction);
+  toolBar->addAction(m_uploadDataAction);
+
   auto systrayMenu = new QMenu;
   systrayMenu->addAction(toggleAction);
   systrayMenu->addSeparator();
@@ -53,6 +71,8 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 
   connect(m_pensieveWidget, SIGNAL(Modified()),
     this, SLOT(UpdateSystrayIcon()));
+  connect(&m_networkManager, SIGNAL(finished(QNetworkReply*)),
+    this, SLOT(EndRequest(QNetworkReply*)));
 }
 
 PensieveWindow::~PensieveWindow() = default;
@@ -114,6 +134,42 @@ void PensieveWindow::UpdateSystrayIcon()
   }
 
   m_systrayIcon.setIcon(QIcon(image));
+}
+
+void PensieveWindow::DownloadData()
+{
+  SetReadOnly(true);
+  m_networkManager.get(QNetworkRequest(QUrl("http://localhost:7142")));
+}
+
+void PensieveWindow::UploadData()
+{
+  SetReadOnly(true);
+  m_networkManager.put(QNetworkRequest(QUrl("http://localhost:7142")),
+    QByteArray(m_pensieveWidget->GetPensieve().ToJSON().c_str()));
+}
+
+void PensieveWindow::EndRequest(QNetworkReply* p_reply)
+{
+  if(p_reply->operation() == QNetworkAccessManager::GetOperation) // GET
+  {
+    Pensieve pensieve;
+    if(Pensieve::FromJSON(p_reply->readAll().data(), pensieve))
+    {
+      m_pensieveWidget->SetPensieve(pensieve);
+    }
+  }
+
+  SetReadOnly(false);
+  p_reply->deleteLater();
+}
+
+void PensieveWindow::SetReadOnly(bool p_readOnly)
+{
+  m_pensieveWidget->setDisabled(p_readOnly);
+  m_addThoughtAction->setDisabled(p_readOnly);
+  m_downloadDataAction->setDisabled(p_readOnly);
+  m_uploadDataAction->setDisabled(p_readOnly);
 }
 
 }
