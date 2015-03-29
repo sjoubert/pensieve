@@ -1,6 +1,7 @@
 #include "psvPensieveWindow.hpp"
 
 #include "psvPensieve.hpp"
+#include "psvSettingsDialog.hpp"
 #include "ui_psvPensieveWindow.h"
 
 #include <QApplication>
@@ -51,6 +52,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     SLOT(DownloadData()));
   connect(m_ui->m_uploadDataAction, SIGNAL(triggered()),
     SLOT(UploadData()));
+  connect(m_ui->m_settingsAction, SIGNAL(triggered()), SLOT(DisplaySettings()));
   connect(m_ui->m_toggleVisibilityAction, SIGNAL(triggered()),
     SLOT(ToggleVisibility()));
   connect(m_ui->m_quitAction, SIGNAL(triggered()),
@@ -70,6 +72,20 @@ void PensieveWindow::closeEvent(QCloseEvent* p_event)
 {
   ToggleVisibility();
   p_event->ignore();
+}
+
+void PensieveWindow::DisplaySettings()
+{
+  // Init dialog with current values
+  SettingsDialog dialog(this);
+  dialog.SetServer(m_server.toString());
+
+  // User input
+  if(dialog.exec() == QDialog::Accepted)
+  {
+    // Save data if needed
+    m_server = dialog.GetServer();
+  }
 }
 
 void PensieveWindow::ToggleVisibility()
@@ -128,13 +144,13 @@ void PensieveWindow::UpdateSystrayIcon()
 void PensieveWindow::DownloadData()
 {
   SetReadOnly(true);
-  m_networkManager.get(QNetworkRequest(QUrl("http://localhost:7142")));
+  m_networkManager.get(QNetworkRequest(m_server));
 }
 
 void PensieveWindow::UploadData()
 {
   SetReadOnly(true);
-  m_networkManager.put(QNetworkRequest(QUrl("http://localhost:7142")),
+  m_networkManager.put(QNetworkRequest(m_server),
     QByteArray(m_pensieveWidget.GetPensieve().ToJSON().c_str()));
 }
 

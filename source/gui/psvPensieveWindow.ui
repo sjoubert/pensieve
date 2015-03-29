@@ -28,6 +28,7 @@
     <addaction name="m_downloadDataAction"/>
     <addaction name="m_uploadDataAction"/>
     <addaction name="separator"/>
+    <addaction name="m_settingsAction"/>
     <addaction name="m_toggleVisibilityAction"/>
     <addaction name="separator"/>
     <addaction name="m_quitAction"/>
@@ -81,6 +82,11 @@
   <action name="m_quitAction">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="m_settingsAction">
+   <property name="text">
+    <string>&amp;Settings</string>
    </property>
   </action>
  </widget>

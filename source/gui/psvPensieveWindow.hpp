@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
+#include <QUrl>
 
 #include <memory>
 
@@ -49,6 +50,11 @@ protected:
   void closeEvent(QCloseEvent* p_event) override;
 
 private Q_SLOTS:
+  /**
+   * Display settings dialog
+   */
+  void DisplaySettings();
+
   /**
    * Toggle window visibility based on the current status
    */
@@ -95,6 +101,8 @@ private:
   QSystemTrayIcon m_systrayIcon;
   /// Network manager
   QNetworkAccessManager m_networkManager;
+  /// Server address
+  QUrl m_server;
 };
 
 }
