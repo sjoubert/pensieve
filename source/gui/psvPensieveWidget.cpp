@@ -3,7 +3,6 @@
 #include "psvPensieve.hpp"
 #include "psvThoughtWidget.hpp"
 
-#include <QScrollArea>
 #include <QSignalMapper>
 #include <QGridLayout>
 
@@ -11,28 +10,14 @@ namespace psv
 {
 
 PensieveWidget::PensieveWidget(QWidget* p_parent):
-  QWidget(p_parent)
+  QScrollArea(p_parent)
 {
-  auto layout = new QHBoxLayout;
-  setLayout(layout);
+  m_ui.setupUi(this);
 
-  auto scrollArea = new QScrollArea;
-  scrollArea->setWidgetResizable(true);
-  layout->addWidget(scrollArea);
-
-  auto widget = new QWidget;
-  widget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-  scrollArea->setWidget(widget);
-
-  m_mainLayout = new QGridLayout;
-  widget->setLayout(m_mainLayout);
-
-  m_startEditionMapper = new QSignalMapper(this);
-  connect(m_startEditionMapper, SIGNAL(mapped(QWidget*)),
-    this, SLOT(StartEdition(QWidget*)));
-  m_deletionMapper = new QSignalMapper(this);
-  connect(m_deletionMapper, SIGNAL(mapped(QWidget*)),
-    this, SLOT(DeleteThought(QWidget*)));
+  connect(&m_startEditionMapper, SIGNAL(mapped(QWidget*)),
+    SLOT(StartEdition(QWidget*)));
+  connect(&m_deletionMapper, SIGNAL(mapped(QWidget*)),
+    SLOT(DeleteThought(QWidget*)));
 }
 
 PensieveWidget::~PensieveWidget() = default;
@@ -67,17 +52,16 @@ void PensieveWidget::SetPensieve(Pensieve const& p_pensieve)
   {
     auto thoughtWidget = new ThoughtWidget;
     thoughtWidget->SetThought(thought);
+    m_thoughtWidgets.push_back(thoughtWidget);
 
     // Connections
-    m_startEditionMapper->setMapping(thoughtWidget, thoughtWidget);
+    m_startEditionMapper.setMapping(thoughtWidget, thoughtWidget);
     connect(thoughtWidget, SIGNAL(EditionStarted()),
-      m_startEditionMapper, SLOT(map()));
-    connect(thoughtWidget, SIGNAL(EditionEnded()), this, SLOT(EndEdition()));
-    m_deletionMapper->setMapping(thoughtWidget, thoughtWidget);
+      &m_startEditionMapper, SLOT(map()));
+    connect(thoughtWidget, SIGNAL(EditionEnded()), SLOT(EndEdition()));
+    m_deletionMapper.setMapping(thoughtWidget, thoughtWidget);
     connect(thoughtWidget, SIGNAL(DeleteRequested()),
-      m_deletionMapper, SLOT(map()));
-
-    m_thoughtWidgets.push_back(thoughtWidget);
+      &m_deletionMapper, SLOT(map()));
   }
   LayoutWidgets();
 
@@ -144,7 +128,7 @@ void PensieveWidget::LayoutWidgets()
       std::max(width() / m_thoughtWidgets[0]->sizeHint().width(), 1);
     for(auto widget: m_thoughtWidgets)
     {
-      m_mainLayout->addWidget(widget, i / columnNumber, i % columnNumber);
+      m_ui.m_gridLayout->addWidget(widget, i / columnNumber, i % columnNumber);
       ++i;
     }
   }

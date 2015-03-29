@@ -1,10 +1,10 @@
 #ifndef PSV_PENSIEVEWIDGET_HPP_20150325182530
 #define PSV_PENSIEVEWIDGET_HPP_20150325182530
 
-#include <QWidget>
+#include "ui_psvPensieveWidget.h"
 
-class QGridLayout;
-class QSignalMapper;
+#include <QScrollArea>
+#include <QSignalMapper>
 
 namespace psv
 {
@@ -15,7 +15,7 @@ class ThoughtWidget;
  * Widget of a pensieve
  */
 class PensieveWidget:
-  public QWidget
+  public QScrollArea
 {
   Q_OBJECT
 
@@ -89,14 +89,14 @@ private:
    */
   void LayoutWidgets();
 
-  /// Main layout
-  QGridLayout* m_mainLayout;
+  /// Widget UI
+  Ui::PensieveWidget m_ui;
   /// Thought widgets container
   std::vector<ThoughtWidget*> m_thoughtWidgets;
   /// Mapper for edition start signal
-  QSignalMapper* m_startEditionMapper;
+  QSignalMapper m_startEditionMapper;
   /// Mapper for deletion signal
-  QSignalMapper* m_deletionMapper;
+  QSignalMapper m_deletionMapper;
 };
 
 }
