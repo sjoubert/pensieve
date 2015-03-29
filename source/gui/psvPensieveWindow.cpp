@@ -27,14 +27,18 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 
   auto fileMenu = menuBar()->addMenu(tr("&File"));
   m_addThoughtAction = fileMenu->addAction(tr("&Add thought"));
+  m_addThoughtAction->setIcon(style()->standardIcon(
+    QStyle::SP_FileDialogNewFolder));
   m_addThoughtAction->setShortcut(QKeySequence::New);
   connect(m_addThoughtAction, SIGNAL(triggered()),
     m_pensieveWidget, SLOT(CreateThought()));
   fileMenu->addSeparator();
   m_downloadDataAction = fileMenu->addAction(tr("&Download"));
+  m_downloadDataAction->setIcon(style()->standardIcon(QStyle::SP_ArrowDown));
   connect(m_downloadDataAction, SIGNAL(triggered()),
     this, SLOT(DownloadData()));
   m_uploadDataAction = fileMenu->addAction(tr("&Upload"));
+  m_uploadDataAction->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
   connect(m_uploadDataAction, SIGNAL(triggered()), this, SLOT(UploadData()));
   fileMenu->addSeparator();
   auto toggleAction = fileMenu->addAction(tr("&Toggle visibility"));
@@ -43,11 +47,14 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   fileMenu->addSeparator();
   auto quitAction = fileMenu->addAction(tr("&Quit"));
   quitAction->setShortcut(QKeySequence::Quit);
+  quitAction->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
   connect(quitAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(quit()));
 
   auto helpMenu = menuBar()->addMenu(tr("&Help"));
   auto aboutQtAction = helpMenu->addAction(tr("&About Qt"));
+  aboutQtAction->setIcon(
+    QIcon(":/qt-project.org/qmessagebox/images/qtlogo-64.png"));
   connect(aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
 
