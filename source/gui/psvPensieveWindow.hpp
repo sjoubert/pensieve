@@ -2,12 +2,11 @@
 #define PSV_PENSIEVEWINDOW_HPP_20150321115845
 
 #include "psvPensieveWidget.hpp"
+#include "ui_psvPensieveWindow.h"
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
-
-class QAction;
 
 namespace psv
 {
@@ -82,18 +81,14 @@ private:
    */
   void SetReadOnly(bool p_readOnly);
 
-  /// Data mode
-  PensieveWidget* m_pensieveWidget;
+  /// Widget UI
+  Ui::PensieveWindow m_ui;
+  /// Main widget
+  PensieveWidget m_pensieveWidget;
   /// Systray icon
   QSystemTrayIcon m_systrayIcon;
   /// Network manager
   QNetworkAccessManager m_networkManager;
-  /// Add thought
-  QAction* m_addThoughtAction;
-  /// Download data
-  QAction* m_downloadDataAction;
-  /// Upload data
-  QAction* m_uploadDataAction;
 };
 
 }
