@@ -1,3 +1,7 @@
+find_package(Boost COMPONENTS program_options REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
+
 # By default, use Qt4 instead of Qt5 since QSystemTrayIcon is currently broken there
 # May be fixed in 5.4.2 and/or 5.5
 # See https://bugreports.qt.io/browse/QTBUG-32811
@@ -18,4 +22,4 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(qpensieve ${source_files})
-target_link_libraries(qpensieve ${qtLibrary} pensieve)
+target_link_libraries(qpensieve ${qtLibrary} ${Boost_LIBRARIES} pensieve)
