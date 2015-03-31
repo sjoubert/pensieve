@@ -11,11 +11,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPainter>
+#include <QSettings>
 
 #include <thread>
 
 namespace psv
 {
+
+QString const PensieveWindow::Settings::SERVER = "server";
 
 PensieveWindow::PensieveWindow(QWidget* p_parent):
   QMainWindow(p_parent),
@@ -48,6 +51,10 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   UpdateSystrayIcon();
   m_systrayIcon.show();
 
+  QApplication::setOrganizationName("qpensieve");
+  QSettings settings;
+  m_server = settings.value(Settings::SERVER, "").toUrl();
+
   connect(m_ui->m_addThoughtAction, SIGNAL(triggered()),
     &m_pensieveWidget, SLOT(CreateThought()));
   connect(m_ui->m_downloadDataAction, SIGNAL(triggered()),
@@ -79,7 +86,7 @@ void PensieveWindow::closeEvent(QCloseEvent* p_event)
 
 void PensieveWindow::DisplaySettings()
 {
-  // Init dialog with current values
+  // Initialize dialog with current values
   SettingsDialog dialog(this);
   dialog.SetServer(m_server.toString());
 
@@ -87,7 +94,13 @@ void PensieveWindow::DisplaySettings()
   if(dialog.exec() == QDialog::Accepted)
   {
     // Save data if needed
+
+    // In memory
     m_server = dialog.GetServer();
+
+    // In settings
+    QSettings settings;
+    settings.setValue(Settings::SERVER, m_server);
   }
 }
 
