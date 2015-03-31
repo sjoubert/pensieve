@@ -21,8 +21,9 @@ class Server
 public:
   /**
    * Construct a server
+   * \param p_storageFile Storage file to use for data persistence
    */
-  Server();
+  Server(std::string const& p_storageFile = "");
 
   Server(Server const&) = delete;
 
@@ -73,6 +74,8 @@ private:
 
   /// Pensieve instance
   Pensieve m_pensieve;
+  /// Storage file
+  std::string m_storageFile;
   /// Buffers
   std::map<void*, std::string> m_buffers;
   /// Empty response

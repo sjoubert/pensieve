@@ -3,15 +3,27 @@
 #include <microhttpd.h>
 
 #include <chrono>
+#include <fstream>
 #include <string>
 #include <thread>
 
 namespace psv
 {
 
-Server::Server()
+Server::Server(std::string const& p_storageFile):
+  m_storageFile(p_storageFile),
+  m_emptyResponse(MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO))
 {
-  m_emptyResponse = MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO);
+  // Initialize data from storage file
+  std::ifstream storageStream(m_storageFile);
+  std::string data((std::istreambuf_iterator<char>(storageStream)),
+    std::istreambuf_iterator<char>());
+
+  Pensieve pensieve;
+  if(Pensieve::FromJSON(data, pensieve))
+  {
+    m_pensieve = pensieve;
+  }
 }
 
 Server::~Server()
@@ -101,7 +113,12 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
       Pensieve pensieve;
       if(Pensieve::FromJSON(m_buffers[*p_requestInternalData], pensieve))
       {
+        // Update memory data
         m_pensieve = pensieve;
+
+        // Persist data if possible (otherwise write will just silently fail)
+        std::ofstream storageStream(m_storageFile);
+        storageStream << m_buffers[*p_requestInternalData];
       }
       else
       {

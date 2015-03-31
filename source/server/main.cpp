@@ -3,6 +3,7 @@
 #include "psvConfigure.hpp"
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <string>
 
 /**
  * Entry point of the server executable
@@ -15,12 +16,17 @@ int main(int p_argc, char** p_argv)
   // Command line arguments
   namespace bpo = boost::program_options;
   unsigned int port;
+  std::string storageFile;
 
   bpo::options_description options("Usage: pensieved [Options]\nOptions");
   options.add_options()
     ("help,h", "Display help message")
     ("version,v", "Display version")
-    ("port,p", bpo::value<unsigned int>(&port)->default_value(7142),
+    ("storage-file,s", bpo::value<std::string>(&storageFile)
+      ->default_value("")->value_name("file"),
+      "Data storage file")
+    ("port,p", bpo::value<unsigned int>(&port)
+      ->default_value(7142)->value_name("number"),
       "Port to listen to");
 
   bpo::variables_map values;
@@ -47,7 +53,7 @@ int main(int p_argc, char** p_argv)
   }
 
   // Start application
-  psv::Server server;
+  psv::Server server(values["storage-file"].as<std::string>());
   server.Run(port);
 
   return 0;
