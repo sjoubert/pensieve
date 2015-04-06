@@ -23,3 +23,4 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(qpensieve ${source_files})
 target_link_libraries(qpensieve ${qtLibrary} ${Boost_LIBRARIES} pensieve)
+install(TARGETS qpensieve DESTINATION bin)
