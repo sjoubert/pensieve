@@ -93,15 +93,6 @@ private Q_SLOTS:
 
 private:
   /**
-   * Settings keys
-   */
-  struct Settings
-  {
-    /// Server address
-    static QString const SERVER;
-  };
-
-  /**
    * Set the read only mode of data
    * @param p_readOnly If it should be read only, editable otherwise
    */

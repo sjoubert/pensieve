@@ -18,8 +18,6 @@
 namespace psv
 {
 
-QString const PensieveWindow::Settings::SERVER = "server";
-
 PensieveWindow::PensieveWindow(QWidget* p_parent):
   QMainWindow(p_parent),
   m_ui(std::make_unique<Ui::PensieveWindow>())
@@ -53,7 +51,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 
   QApplication::setOrganizationName("qpensieve");
   QSettings settings;
-  m_server = settings.value(Settings::SERVER, "").toUrl();
+  m_server = settings.value(SettingsDialog::Settings::SERVER, "").toUrl();
 
   connect(m_ui->m_addThoughtAction, SIGNAL(triggered()),
     &m_pensieveWidget, SLOT(CreateThought()));
@@ -86,9 +84,13 @@ void PensieveWindow::closeEvent(QCloseEvent* p_event)
 
 void PensieveWindow::DisplaySettings()
 {
+  QSettings settings;
+
   // Initialize dialog with current values
   SettingsDialog dialog(this);
   dialog.SetServer(m_server.toString());
+  dialog.SetStartHidden(
+    settings.value(SettingsDialog::Settings::START_HIDDEN, false).toBool());
 
   // User input
   if(dialog.exec() == QDialog::Accepted)
@@ -99,8 +101,9 @@ void PensieveWindow::DisplaySettings()
     m_server = dialog.GetServer();
 
     // In settings
-    QSettings settings;
-    settings.setValue(Settings::SERVER, m_server);
+    settings.setValue(SettingsDialog::Settings::SERVER, m_server);
+    settings.setValue(
+      SettingsDialog::Settings::START_HIDDEN, dialog.GetStartHidden());
   }
 }
 

@@ -1,8 +1,10 @@
 #include "psvPensieveWindow.hpp"
 
 #include "psvConfigure.hpp"
+#include "psvSettingsDialog.hpp"
 #include <boost/program_options.hpp>
 #include <QApplication>
+#include <QSettings>
 #include <iostream>
 
 /**
@@ -52,7 +54,9 @@ int main(int p_argc, char** p_argv)
   QApplication app(p_argc, p_argv);
 
   psv::PensieveWindow window;
-  window.showMaximized();
+  window.setWindowState(Qt::WindowMaximized);
+  window.setHidden(QSettings().value(
+    psv::SettingsDialog::Settings::START_HIDDEN, false).toBool());
 
   return app.exec();
 }

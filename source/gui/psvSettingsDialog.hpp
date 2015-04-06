@@ -23,6 +23,17 @@ class SettingsDialog:
 
 public:
   /**
+   * Settings keys
+   */
+  struct Settings
+  {
+    /// Server address
+    static QString const SERVER;
+    /// Start the application hidden in the systray
+    static QString const START_HIDDEN;
+  };
+
+  /**
    * Construct the widget
    * @param p_parent Parent widget
    */
@@ -48,6 +59,18 @@ public:
    * @return Server address
    */
   QString GetServer() const;
+
+  /**
+   * Set start hidden value
+   * @param p_startHidden Start hidden value
+   */
+  void SetStartHidden(bool p_startHidden);
+
+  /**
+   * Get the start hidden value
+   * @return Start hidden value
+   */
+  bool GetStartHidden() const;
 
 private:
   /// Widget UI
