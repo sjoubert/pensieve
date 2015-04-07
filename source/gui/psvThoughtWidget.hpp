@@ -53,6 +53,12 @@ public:
    */
   void SetThought(Thought const& p_thought);
 
+  /**
+   * Set the highlighted status of the thought
+   * @param p_highlighted New highlighted status
+   */
+  void SetHighlighted(bool p_highlighted);
+
 Q_SIGNALS:
   /**
    * Emitted when the user request the thought deletion

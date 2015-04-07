@@ -12,6 +12,7 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   m_ui(std::make_unique<Ui::ThoughtWidget>())
 {
   m_ui->setupUi(this);
+  SetHighlighted(false);
 
   m_contextMenu = new QMenu(this);
   m_contextMenu->addAction(m_ui->m_addFlagAction);
@@ -56,6 +57,28 @@ void ThoughtWidget::SetThought(Thought const& p_thought)
   {
     m_ui->m_flags->addItem(QString::fromStdString(flag));
   }
+}
+
+void ThoughtWidget::SetHighlighted(bool p_highlighted)
+{
+  static QString const s_styleSheetTemplate = R"(
+    QGroupBox
+    {
+      border-width: 2px;
+      border-style: solid;
+      border-radius: 5px;
+    }
+    QGroupBox:enabled
+    {
+      border-color: %1;
+    }
+    QGroupBox:disabled
+    {
+      border-color: lightgray;
+    }
+  )";
+
+  setStyleSheet(s_styleSheetTemplate.arg(p_highlighted ? "red" : "black"));
 }
 
 void ThoughtWidget::SetEditMode(bool p_editMode)
