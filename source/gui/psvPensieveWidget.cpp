@@ -1,6 +1,7 @@
 #include "psvPensieveWidget.hpp"
 
 #include "psvPensieve.hpp"
+#include "psvThought.hpp"
 #include "psvThoughtWidget.hpp"
 #include "ui_psvPensieveWidget.h"
 
@@ -51,6 +52,7 @@ void PensieveWidget::SetPensieve(Pensieve const& p_pensieve)
   {
     auto thoughtWidget = new ThoughtWidget;
     thoughtWidget->SetThought(thought);
+    thoughtWidget->SetHighlighted(ShouldBeHighlighted(thought));
     m_thoughtWidgets.push_back(thoughtWidget);
 
     // Connections
@@ -72,6 +74,25 @@ void PensieveWidget::resizeEvent(QResizeEvent* p_event)
 {
   QWidget::resizeEvent(p_event);
   LayoutWidgets();
+}
+
+void PensieveWidget::SetFlagsFilter(QRegExp const& p_filter)
+{
+  m_flagsFilter = p_filter;
+  // Update highlighted thoughts
+  SetPensieve(GetPensieve());
+}
+
+QRegExp const& PensieveWidget::GetFlagsFilter() const
+{
+  return m_flagsFilter;
+}
+
+unsigned int PensieveWidget::GetHighlightedCount() const
+{
+  auto thoughts = GetPensieve().GetThoughts();
+  return std::count_if(thoughts.begin(), thoughts.end(),
+    [this](auto const& p_thought) { return ShouldBeHighlighted(p_thought); });
 }
 
 void PensieveWidget::CreateThought()
@@ -131,6 +152,19 @@ void PensieveWidget::LayoutWidgets()
       ++i;
     }
   }
+}
+
+bool PensieveWidget::ShouldBeHighlighted(Thought const& p_thought) const
+{
+  for(auto const& flag: p_thought.GetFlags())
+  {
+    if(m_flagsFilter.indexIn(QString::fromStdString(flag)) != -1)
+    {
+      return true;
+    }
+  }
+
+  return m_flagsFilter.pattern().isEmpty();
 }
 
 }

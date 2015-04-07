@@ -2,6 +2,7 @@
 #define PSV_SETTINGSDIALOG_HPP_20150329214117
 
 #include <QDialog>
+#include <QRegExp>
 
 #include <memory>
 
@@ -29,6 +30,8 @@ public:
   {
     /// Server address
     static QString const SERVER;
+    /// Regex filter for flags
+    static QString const FLAGS_FILTER;
     /// Start the application hidden in the systray
     static QString const START_HIDDEN;
   };
@@ -71,6 +74,18 @@ public:
    * @return Start hidden value
    */
   bool GetStartHidden() const;
+
+  /**
+   * Set the flags filter regex
+   * @param p_filter Flags filter
+   */
+  void SetFlagsFilter(QRegExp const& p_filter);
+
+  /**
+   * Get the flags filter regex
+   * @return Flags filter
+   */
+  QRegExp GetFlagsFilter() const;
 
 private:
   /// Widget UI

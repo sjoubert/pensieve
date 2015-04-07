@@ -6,6 +6,7 @@ namespace psv
 {
 
 QString const SettingsDialog::Settings::SERVER = "server";
+QString const SettingsDialog::Settings::FLAGS_FILTER = "flags_filter";
 QString const SettingsDialog::Settings::START_HIDDEN = "start_hidden";
 
 SettingsDialog::SettingsDialog(QWidget* p_parent):
@@ -35,6 +36,16 @@ void SettingsDialog::SetStartHidden(bool p_startHidden)
 bool SettingsDialog::GetStartHidden() const
 {
   return m_ui->m_startHidden->isChecked();
+}
+
+void SettingsDialog::SetFlagsFilter(QRegExp const& p_filter)
+{
+  m_ui->m_flagsFilter->setText(p_filter.pattern());
+}
+
+QRegExp SettingsDialog::GetFlagsFilter() const
+{
+  return QRegExp(m_ui->m_flagsFilter->text());
 }
 
 }

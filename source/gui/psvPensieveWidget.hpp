@@ -14,6 +14,7 @@ class PensieveWidget;
 namespace psv
 {
 class Pensieve;
+class Thought;
 class ThoughtWidget;
 
 /**
@@ -58,6 +59,24 @@ public:
    */
   void resizeEvent(QResizeEvent* p_event) override;
 
+  /**
+   * Set the flags filter regex
+   * @param p_filter Flags filter
+   */
+  void SetFlagsFilter(QRegExp const& p_filter);
+
+  /**
+   * Get the flags filter regex
+   * @return Flags filter
+   */
+  QRegExp const& GetFlagsFilter() const;
+
+  /**
+   * Get the number of thoughts matching the flags filter
+   * @return The number of highlighted thoughts
+   */
+  unsigned int GetHighlightedCount() const;
+
 public Q_SLOTS:
   /**
    * Create a new empty thought
@@ -94,6 +113,13 @@ private:
    */
   void LayoutWidgets();
 
+  /**
+   * Helper method to determine if a thought should be highlighted
+   * @param p_thought Thought to test
+   * @return If the thought should be highlighted
+   */
+  bool ShouldBeHighlighted(Thought const& p_thought) const;
+
   /// Widget UI
   std::unique_ptr<Ui::PensieveWidget> m_ui;
   /// Thought widgets container
@@ -102,6 +128,8 @@ private:
   QSignalMapper m_startEditionMapper;
   /// Mapper for deletion signal
   QSignalMapper m_deletionMapper;
+  /// Flags filter
+  QRegExp m_flagsFilter;
 };
 
 }

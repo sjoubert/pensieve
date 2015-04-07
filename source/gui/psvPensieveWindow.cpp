@@ -45,13 +45,15 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   systrayMenu->addSeparator();
   systrayMenu->addAction(m_ui->m_quitAction);
 
-  m_systrayIcon.setContextMenu(systrayMenu);
-  UpdateSystrayIcon();
-  m_systrayIcon.show();
-
   QApplication::setOrganizationName("qpensieve");
   QSettings settings;
   m_server = settings.value(SettingsDialog::Settings::SERVER, "").toUrl();
+  m_pensieveWidget.SetFlagsFilter(
+    settings.value(SettingsDialog::Settings::FLAGS_FILTER, "").toRegExp());
+
+  m_systrayIcon.setContextMenu(systrayMenu);
+  UpdateSystrayIcon();
+  m_systrayIcon.show();
 
   connect(m_ui->m_addThoughtAction, SIGNAL(triggered()),
     &m_pensieveWidget, SLOT(CreateThought()));
@@ -89,6 +91,7 @@ void PensieveWindow::DisplaySettings()
   // Initialize dialog with current values
   SettingsDialog dialog(this);
   dialog.SetServer(m_server.toString());
+  dialog.SetFlagsFilter(m_pensieveWidget.GetFlagsFilter());
   dialog.SetStartHidden(
     settings.value(SettingsDialog::Settings::START_HIDDEN, false).toBool());
 
@@ -99,9 +102,13 @@ void PensieveWindow::DisplaySettings()
 
     // In memory
     m_server = dialog.GetServer();
+    m_pensieveWidget.SetFlagsFilter(dialog.GetFlagsFilter());
+    UpdateSystrayIcon();
 
     // In settings
     settings.setValue(SettingsDialog::Settings::SERVER, m_server);
+    settings.setValue(
+      SettingsDialog::Settings::FLAGS_FILTER, dialog.GetFlagsFilter());
     settings.setValue(
       SettingsDialog::Settings::START_HIDDEN, dialog.GetStartHidden());
   }
@@ -131,7 +138,7 @@ void PensieveWindow::UpdateSystrayIcon()
 {
   QPixmap image(":/psv/pensieve");
 
-  auto count = m_pensieveWidget.GetPensieve().GetThoughts().size();
+  auto count = m_pensieveWidget.GetHighlightedCount();
   if(count > 0)
   {
     QPainter painter(&image);
