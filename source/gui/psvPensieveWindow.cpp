@@ -74,6 +74,8 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   connect(&m_pensieveWidget, SIGNAL(Modified()), SLOT(UpdateSystrayIcon()));
   connect(&m_networkManager, SIGNAL(finished(QNetworkReply*)),
     SLOT(EndRequest(QNetworkReply*)));
+  connect(&m_pensieveWidget, SIGNAL(EditionStarted()), SLOT(StartEdition()));
+  connect(&m_pensieveWidget, SIGNAL(EditionEnded()), SLOT(EndEdition()));
 }
 
 PensieveWindow::~PensieveWindow() = default;
@@ -199,6 +201,20 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
 
   SetReadOnly(false);
   p_reply->deleteLater();
+}
+
+void PensieveWindow::StartEdition()
+{
+  m_ui->m_addThoughtAction->setDisabled(true);
+  m_ui->m_downloadDataAction->setDisabled(true);
+  m_ui->m_uploadDataAction->setDisabled(true);
+}
+
+void PensieveWindow::EndEdition()
+{
+  m_ui->m_addThoughtAction->setEnabled(true);
+  m_ui->m_downloadDataAction->setEnabled(true);
+  m_ui->m_uploadDataAction->setEnabled(true);
 }
 
 void PensieveWindow::SetReadOnly(bool p_readOnly)

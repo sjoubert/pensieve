@@ -89,6 +89,16 @@ Q_SIGNALS:
    */
   void Modified() const;
 
+  /**
+   * Emitted when edition mode is entered
+   */
+  void EditionStarted() const;
+
+  /**
+   * Emitted when edition mode is left
+   */
+  void EditionEnded() const;
+
 private Q_SLOTS:
   /**
    * Handle the beginning of a though edition

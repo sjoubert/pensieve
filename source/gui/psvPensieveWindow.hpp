@@ -91,6 +91,16 @@ private Q_SLOTS:
    */
   void EndRequest(QNetworkReply* p_reply);
 
+  /**
+   * Start edition mode
+   */
+  void StartEdition();
+
+  /**
+   * End edition mode
+   */
+  void EndEdition();
+
 private:
   /**
    * Set the read only mode of data

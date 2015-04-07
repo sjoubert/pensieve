@@ -104,6 +104,8 @@ void PensieveWidget::CreateThought()
 
 void PensieveWidget::StartEdition(QWidget* p_widget)
 {
+  Q_EMIT(EditionStarted());
+
   for(auto widget: m_thoughtWidgets)
   {
     if(widget != p_widget)
@@ -122,6 +124,8 @@ void PensieveWidget::EndEdition()
 
   // Simulate data send/receive to server
   SetPensieve(GetPensieve());
+
+  Q_EMIT(EditionEnded());
 }
 
 void PensieveWidget::DeleteThought(QWidget* p_widget)
