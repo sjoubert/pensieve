@@ -55,44 +55,69 @@
    <addaction name="m_downloadDataAction"/>
    <addaction name="m_uploadDataAction"/>
   </widget>
+  <widget class="QStatusBar" name="m_statusBar"/>
   <action name="m_aboutQtAction">
    <property name="text">
     <string>About &amp;Qt</string>
+   </property>
+   <property name="toolTip">
+    <string>Information about the Qt framework</string>
    </property>
   </action>
   <action name="m_addThoughtAction">
    <property name="text">
     <string>&amp;Add thought</string>
    </property>
+   <property name="toolTip">
+    <string>Add a new thought</string>
+   </property>
   </action>
   <action name="m_downloadDataAction">
    <property name="text">
     <string>&amp;Download</string>
+   </property>
+   <property name="toolTip">
+    <string>Download data from server</string>
    </property>
   </action>
   <action name="m_uploadDataAction">
    <property name="text">
     <string>&amp;Upload</string>
    </property>
+   <property name="toolTip">
+    <string>Upload data to server</string>
+   </property>
   </action>
   <action name="m_toggleVisibilityAction">
    <property name="text">
     <string>&amp;Toggle visibility</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle visibility of the application</string>
    </property>
   </action>
   <action name="m_quitAction">
    <property name="text">
     <string>&amp;Quit</string>
    </property>
+   <property name="toolTip">
+    <string>Quit the application</string>
+   </property>
   </action>
   <action name="m_settingsAction">
    <property name="text">
     <string>&amp;Settings</string>
    </property>
+   <property name="toolTip">
+    <string>Configure the application settings</string>
+   </property>
   </action>
   <action name="m_aboutAction">
    <property name="text">
     <string>&amp;About</string>
+   </property>
+   <property name="toolTip">
+    <string>Information about the application</string>
    </property>
   </action>
  </widget>

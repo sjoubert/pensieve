@@ -25,6 +25,10 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   m_ui->setupUi(this);
   setWindowIcon(QIcon(":/psv/pensieve"));
   setCentralWidget(&m_pensieveWidget);
+  for(auto action: m_ui->m_fileMenu->actions() + m_ui->m_helpMenu->actions())
+  {
+    action->setStatusTip(action->toolTip());
+  }
 
   m_ui->m_addThoughtAction->setIcon(
     style()->standardIcon(QStyle::SP_FileDialogNewFolder));

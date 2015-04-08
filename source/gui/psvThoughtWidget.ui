@@ -76,10 +76,16 @@
    <property name="text">
     <string>Add</string>
    </property>
+   <property name="toolTip">
+    <string>Add a new flag</string>
+   </property>
   </action>
   <action name="m_removeFlagsAction">
    <property name="text">
     <string>Remove</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove selected flag</string>
    </property>
   </action>
  </widget>

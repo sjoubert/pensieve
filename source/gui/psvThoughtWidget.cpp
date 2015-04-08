@@ -17,6 +17,10 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   m_contextMenu = new QMenu(this);
   m_contextMenu->addAction(m_ui->m_addFlagAction);
   m_contextMenu->addAction(m_ui->m_removeFlagsAction);
+  for(auto action: m_contextMenu->actions())
+  {
+    action->setStatusTip(action->toolTip());
+  }
 
   SetDisplayMode();
 
