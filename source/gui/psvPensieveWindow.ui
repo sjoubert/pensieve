@@ -10,6 +10,9 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
   <widget class="QMenuBar" name="m_menuBar">
    <property name="geometry">
     <rect>
