@@ -3,9 +3,11 @@
 
 #include "psvPensieveWidget.hpp"
 
+#include <QLabel>
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
+#include <QTimer>
 #include <QUrl>
 
 #include <memory>
@@ -76,6 +78,12 @@ private Q_SLOTS:
   void UpdateSystrayIcon();
 
   /**
+   * Update network status icon
+   * @param p_status New network status
+   */
+  void UpdateNetworkStatus();
+
+  /**
    * Get data from server
    */
   void DownloadData();
@@ -118,6 +126,10 @@ private:
   QNetworkAccessManager m_networkManager;
   /// Server address
   QUrl m_server;
+  /// Network status in the status bar
+  QLabel m_networkStatusLabel;
+  /// Network status update timer
+  QTimer m_networkStatusTimer;
 };
 
 }

@@ -3,5 +3,15 @@
   <qresource prefix="/psv">
     <!-- Pensieve image from http://iconka.com/ -->
     <file alias="pensieve">pensieve.png</file>
+    <!--
+      Connected image from http://findicons.com
+      by http://gakuseisean.deviantart.com/
+    -->
+    <file alias="connected">connected.png</file>
+    <!--
+      Disconnected image from http://findicons.com
+      by http://mazenl77.deviantart.com/
+    -->
+    <file alias="disconnected">disconnected.png</file>
   </qresource>
 </RCC>

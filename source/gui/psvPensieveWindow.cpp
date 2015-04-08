@@ -44,6 +44,13 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   m_ui->m_toggleVisibilityAction->setShortcut(QKeySequence::Close);
   m_ui->m_quitAction->setShortcut(QKeySequence::Quit);
 
+  m_ui->m_statusBar->addPermanentWidget(&m_networkStatusLabel);
+  UpdateNetworkStatus();
+  connect(&m_networkStatusTimer, SIGNAL(timeout()),
+    SLOT(UpdateNetworkStatus()));
+  m_networkStatusTimer.setInterval(500);
+  m_networkStatusTimer.start();
+
   auto systrayMenu = new QMenu;
   systrayMenu->addAction(m_ui->m_toggleVisibilityAction);
   systrayMenu->addSeparator();
@@ -177,6 +184,39 @@ void PensieveWindow::UpdateSystrayIcon()
   }
 
   m_systrayIcon.setIcon(QIcon(image));
+}
+
+void PensieveWindow::UpdateNetworkStatus()
+{
+  auto status = m_networkManager.networkAccessible();
+  m_ui->m_downloadDataAction->setEnabled(
+    status == QNetworkAccessManager::Accessible);
+  m_ui->m_uploadDataAction->setEnabled(
+    status == QNetworkAccessManager::Accessible);
+
+  QPixmap pixmap;
+  switch(status)
+  {
+    case QNetworkAccessManager::Accessible:
+    {
+      pixmap = QPixmap(":/psv/connected");
+      break;
+    }
+    case QNetworkAccessManager::NotAccessible:
+    {
+      pixmap = QPixmap(":/psv/disconnected");
+      break;
+    }
+    default:
+    {
+      m_networkStatusLabel.clear();
+      return;
+    }
+  }
+
+  pixmap = pixmap.scaledToHeight(m_networkStatusLabel.height(),
+    Qt::SmoothTransformation);
+  m_networkStatusLabel.setPixmap(pixmap);
 }
 
 void PensieveWindow::DownloadData()
