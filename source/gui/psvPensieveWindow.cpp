@@ -134,8 +134,19 @@ void PensieveWindow::ToggleVisibility()
 
 void PensieveWindow::About()
 {
+  auto text = tr("Version %1\n\n"
+    "Developer:\n"
+    "    Sylvain Joubert <joubert.sy@gmail.com>\n\n"
+    "Application icon:\n"
+    "    Denis Sazhin <http://iconka.com>\n"
+    "Connected network icon:\n"
+    "    gakuseisean (Sean) <http://gakuseisean.deviantart.com>\n"
+    "Disconnected network icon:\n"
+    "    MazeNL77 (Peter) <http://mazenl77.deviantart.com>\n"
+  );
+
   QMessageBox::about(this, tr("About"),
-    tr("Version %1").arg(QString::fromStdString(PENSIEVE_VERSION)));
+    text.arg(QString::fromStdString(PENSIEVE_VERSION)));
 }
 
 void PensieveWindow::SystrayActivated(
