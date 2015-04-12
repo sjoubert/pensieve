@@ -45,11 +45,6 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   m_ui->m_quitAction->setShortcut(QKeySequence::Quit);
 
   m_ui->m_statusBar->addPermanentWidget(&m_networkStatusLabel);
-  UpdateNetworkStatus();
-  connect(&m_networkStatusTimer, SIGNAL(timeout()),
-    SLOT(UpdateNetworkStatus()));
-  m_networkStatusTimer.setInterval(500);
-  m_networkStatusTimer.start();
 
   auto systrayMenu = new QMenu;
   systrayMenu->addAction(m_ui->m_toggleVisibilityAction);
@@ -87,6 +82,19 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     SLOT(EndRequest(QNetworkReply*)));
   connect(&m_pensieveWidget, SIGNAL(EditionStarted()), SLOT(StartEdition()));
   connect(&m_pensieveWidget, SIGNAL(EditionEnded()), SLOT(EndEdition()));
+  connect(&m_networkStatusTimer, SIGNAL(timeout()),
+    SLOT(UpdateNetworkStatus()));
+  connect(&m_updateDataTimer, SIGNAL(timeout()), SLOT(DownloadData()));
+
+  // Setup network status
+  UpdateNetworkStatus();
+  m_networkStatusTimer.start(500);
+
+  // Get initial data and start download timer
+  DownloadData();
+  m_updateDataTimer.setInterval(
+    settings.value(SettingsDialog::Settings::UPDATE_INTERVAL, 0).toInt());
+  StartUpdateTimer();
 }
 
 PensieveWindow::~PensieveWindow() = default;
@@ -105,6 +113,7 @@ void PensieveWindow::DisplaySettings()
   SettingsDialog dialog(this);
   dialog.SetServer(m_server.toString());
   dialog.SetFlagsFilter(m_pensieveWidget.GetFlagsFilter());
+  dialog.SetUpdateInterval(m_updateDataTimer.interval());
   dialog.SetStartHidden(
     settings.value(SettingsDialog::Settings::START_HIDDEN, false).toBool());
 
@@ -115,6 +124,9 @@ void PensieveWindow::DisplaySettings()
 
     // In memory
     m_server = dialog.GetServer();
+    m_updateDataTimer.stop();
+    m_updateDataTimer.setInterval(dialog.GetUpdateInterval());
+    StartUpdateTimer();
     m_pensieveWidget.SetFlagsFilter(dialog.GetFlagsFilter());
     UpdateSystrayIcon();
 
@@ -122,6 +134,8 @@ void PensieveWindow::DisplaySettings()
     settings.setValue(SettingsDialog::Settings::SERVER, m_server);
     settings.setValue(
       SettingsDialog::Settings::FLAGS_FILTER, dialog.GetFlagsFilter());
+    settings.setValue(
+      SettingsDialog::Settings::UPDATE_INTERVAL, dialog.GetUpdateInterval());
     settings.setValue(
       SettingsDialog::Settings::START_HIDDEN, dialog.GetStartHidden());
   }
@@ -199,14 +213,8 @@ void PensieveWindow::UpdateSystrayIcon()
 
 void PensieveWindow::UpdateNetworkStatus()
 {
-  auto status = m_networkManager.networkAccessible();
-  m_ui->m_downloadDataAction->setEnabled(
-    status == QNetworkAccessManager::Accessible);
-  m_ui->m_uploadDataAction->setEnabled(
-    status == QNetworkAccessManager::Accessible);
-
   QPixmap pixmap;
-  switch(status)
+  switch(m_networkManager.networkAccessible())
   {
     case QNetworkAccessManager::Accessible:
     {
@@ -253,6 +261,10 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
       m_pensieveWidget.SetPensieve(pensieve);
     }
   }
+  else // PUT
+  {
+    DownloadData();
+  }
 
   SetReadOnly(false);
   p_reply->deleteLater();
@@ -260,9 +272,11 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
 
 void PensieveWindow::StartEdition()
 {
+  m_updateDataTimer.stop();
   m_ui->m_addThoughtAction->setDisabled(true);
   m_ui->m_downloadDataAction->setDisabled(true);
   m_ui->m_uploadDataAction->setDisabled(true);
+  m_ui->m_settingsAction->setDisabled(true);
 }
 
 void PensieveWindow::EndEdition()
@@ -270,6 +284,9 @@ void PensieveWindow::EndEdition()
   m_ui->m_addThoughtAction->setEnabled(true);
   m_ui->m_downloadDataAction->setEnabled(true);
   m_ui->m_uploadDataAction->setEnabled(true);
+  m_ui->m_settingsAction->setEnabled(true);
+  UploadData();
+  StartUpdateTimer();
 }
 
 void PensieveWindow::SetReadOnly(bool p_readOnly)
@@ -278,6 +295,14 @@ void PensieveWindow::SetReadOnly(bool p_readOnly)
   m_ui->m_addThoughtAction->setDisabled(p_readOnly);
   m_ui->m_downloadDataAction->setDisabled(p_readOnly);
   m_ui->m_uploadDataAction->setDisabled(p_readOnly);
+}
+
+void PensieveWindow::StartUpdateTimer()
+{
+  if(m_updateDataTimer.interval() > 0)
+  {
+    m_updateDataTimer.start();
+  }
 }
 
 }

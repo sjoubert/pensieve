@@ -7,6 +7,7 @@ namespace psv
 
 QString const SettingsDialog::Settings::SERVER = "server";
 QString const SettingsDialog::Settings::FLAGS_FILTER = "flags_filter";
+QString const SettingsDialog::Settings::UPDATE_INTERVAL = "update_interval";
 QString const SettingsDialog::Settings::START_HIDDEN = "start_hidden";
 
 SettingsDialog::SettingsDialog(QWidget* p_parent):
@@ -28,16 +29,6 @@ QString SettingsDialog::GetServer() const
   return m_ui->m_server->text();
 }
 
-void SettingsDialog::SetStartHidden(bool p_startHidden)
-{
-  m_ui->m_startHidden->setChecked(p_startHidden);
-}
-
-bool SettingsDialog::GetStartHidden() const
-{
-  return m_ui->m_startHidden->isChecked();
-}
-
 void SettingsDialog::SetFlagsFilter(QRegExp const& p_filter)
 {
   m_ui->m_flagsFilter->setText(p_filter.pattern());
@@ -46,6 +37,30 @@ void SettingsDialog::SetFlagsFilter(QRegExp const& p_filter)
 QRegExp SettingsDialog::GetFlagsFilter() const
 {
   return QRegExp(m_ui->m_flagsFilter->text());
+}
+
+void SettingsDialog::SetUpdateInterval(int p_msec)
+{
+  /// @todo When dropping support for Qt4
+  /// Replace addMSecs with fromMSecsSinceStartOfDay()
+  m_ui->m_updateInterval->setTime(QTime(0, 0).addMSecs(p_msec));
+}
+
+int SettingsDialog::GetUpdateInterval() const
+{
+  /// @todo When dropping support for Qt4
+  /// Replace msecsTo with msecsSinceStartOfDay()
+  return - m_ui->m_updateInterval->time().msecsTo(QTime(0, 0));
+}
+
+void SettingsDialog::SetStartHidden(bool p_startHidden)
+{
+  m_ui->m_startHidden->setChecked(p_startHidden);
+}
+
+bool SettingsDialog::GetStartHidden() const
+{
+  return m_ui->m_startHidden->isChecked();
 }
 
 }

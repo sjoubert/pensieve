@@ -116,6 +116,13 @@ private:
    */
   void SetReadOnly(bool p_readOnly);
 
+  /**
+   * Start the update data timer
+   *
+   * The timer is not started if the update interval is set to 0
+   */
+  void StartUpdateTimer();
+
   /// Widget UI
   std::unique_ptr<Ui::PensieveWindow> m_ui;
   /// Main widget
@@ -130,6 +137,8 @@ private:
   QLabel m_networkStatusLabel;
   /// Network status update timer
   QTimer m_networkStatusTimer;
+  /// Data download timer
+  QTimer m_updateDataTimer;
 };
 
 }

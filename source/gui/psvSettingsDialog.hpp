@@ -32,6 +32,8 @@ public:
     static QString const SERVER;
     /// Regex filter for flags
     static QString const FLAGS_FILTER;
+    /// Data download interval
+    static QString const UPDATE_INTERVAL;
     /// Start the application hidden in the systray
     static QString const START_HIDDEN;
   };
@@ -64,18 +66,6 @@ public:
   QString GetServer() const;
 
   /**
-   * Set start hidden value
-   * @param p_startHidden Start hidden value
-   */
-  void SetStartHidden(bool p_startHidden);
-
-  /**
-   * Get the start hidden value
-   * @return Start hidden value
-   */
-  bool GetStartHidden() const;
-
-  /**
    * Set the flags filter regex
    * @param p_filter Flags filter
    */
@@ -86,6 +76,30 @@ public:
    * @return Flags filter
    */
   QRegExp GetFlagsFilter() const;
+
+  /**
+   * Set the update interval
+   * @param p_msec Update interval in ms
+   */
+  void SetUpdateInterval(int p_msec);
+
+  /**
+   * Get the update interval
+   * @return Update interval in ms
+   */
+  int GetUpdateInterval() const;
+
+  /**
+   * Set start hidden value
+   * @param p_startHidden Start hidden value
+   */
+  void SetStartHidden(bool p_startHidden);
+
+  /**
+   * Get the start hidden value
+   * @return Start hidden value
+   */
+  bool GetStartHidden() const;
 
 private:
   /// Widget UI

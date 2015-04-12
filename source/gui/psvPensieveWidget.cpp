@@ -97,9 +97,13 @@ unsigned int PensieveWidget::GetHighlightedCount() const
 
 void PensieveWidget::CreateThought()
 {
+  Q_EMIT(EditionStarted());
+
   auto currentPensieve = GetPensieve();
   currentPensieve.GetThoughts().emplace_back();
   SetPensieve(currentPensieve);
+
+  Q_EMIT(EditionEnded());
 }
 
 void PensieveWidget::StartEdition(QWidget* p_widget)
@@ -130,6 +134,8 @@ void PensieveWidget::EndEdition()
 
 void PensieveWidget::DeleteThought(QWidget* p_widget)
 {
+  Q_EMIT(EditionStarted());
+
   auto found =
     std::find(m_thoughtWidgets.begin(), m_thoughtWidgets.end(), p_widget);
   if(found != m_thoughtWidgets.end())
@@ -141,6 +147,8 @@ void PensieveWidget::DeleteThought(QWidget* p_widget)
     // Simulate data send/receive to server
     SetPensieve(GetPensieve());
   }
+
+  Q_EMIT(EditionEnded());
 }
 
 void PensieveWidget::LayoutWidgets()
