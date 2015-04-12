@@ -5,6 +5,10 @@ link_directories(${Boost_LIBRARY_DIRS})
 find_package(Microhttpd REQUIRED)
 include_directories(${MICROHTTPD_INCLUDE_DIRS})
 
+if(UNIX)
+  add_definitions(-DPSV_POSIX)
+endif()
+
 file(GLOB source_files "*.?pp")
 add_executable(pensieved ${source_files})
 target_link_libraries(pensieved ${MICROHTTPD_LIBRARIES} ${Boost_LIBRARIES} pensieve)
