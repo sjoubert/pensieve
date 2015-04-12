@@ -46,7 +46,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
 
   m_ui->m_statusBar->addPermanentWidget(&m_networkStatusLabel);
 
-  auto systrayMenu = new QMenu;
+  auto systrayMenu = new QMenu(this);
   systrayMenu->addAction(m_ui->m_toggleVisibilityAction);
   systrayMenu->addSeparator();
   systrayMenu->addAction(m_ui->m_quitAction);
