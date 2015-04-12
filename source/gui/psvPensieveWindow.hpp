@@ -2,8 +2,10 @@
 #define PSV_PENSIEVEWINDOW_HPP_20150321115845
 
 #include "psvPensieveWidget.hpp"
+#include "psvLogDialog.hpp"
 
 #include <QLabel>
+#include <QStringListModel>
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QSystemTrayIcon>
@@ -56,6 +58,11 @@ private Q_SLOTS:
    * Display settings dialog
    */
   void DisplaySettings();
+
+  /**
+   * Display log dialog
+   */
+  void DisplayLog();
 
   /**
    * Toggle window visibility based on the current status
@@ -123,6 +130,12 @@ private:
    */
   void StartUpdateTimer();
 
+  /**
+   * Create a new entry in the log system
+   * @param p_message Log message
+   */
+  void Log(QString const& p_message);
+
   /// Widget UI
   std::unique_ptr<Ui::PensieveWindow> m_ui;
   /// Main widget
@@ -139,6 +152,10 @@ private:
   QTimer m_networkStatusTimer;
   /// Data download timer
   QTimer m_updateDataTimer;
+  /// Log model
+  QStringListModel m_logModel;
+  /// Log dialog
+  LogDialog* m_logDialog;
 };
 
 }

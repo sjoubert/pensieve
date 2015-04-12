@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QDateTime>
 #include <QMessageBox>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -20,7 +21,8 @@ namespace psv
 
 PensieveWindow::PensieveWindow(QWidget* p_parent):
   QMainWindow(p_parent),
-  m_ui(std::make_unique<Ui::PensieveWindow>())
+  m_ui(std::make_unique<Ui::PensieveWindow>()),
+  m_logDialog(nullptr)
 {
   m_ui->setupUi(this);
   setWindowIcon(QIcon(":/psv/pensieve"));
@@ -72,6 +74,7 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
     SLOT(ToggleVisibility()));
   connect(m_ui->m_quitAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(quit()));
+  connect(m_ui->m_logAction, SIGNAL(triggered()), SLOT(DisplayLog()));
   connect(m_ui->m_aboutAction, SIGNAL(triggered()), SLOT(About()));
   connect(m_ui->m_aboutQtAction, SIGNAL(triggered()),
     QApplication::instance(), SLOT(aboutQt()));
@@ -139,6 +142,18 @@ void PensieveWindow::DisplaySettings()
     settings.setValue(
       SettingsDialog::Settings::START_HIDDEN, dialog.GetStartHidden());
   }
+}
+
+void PensieveWindow::DisplayLog()
+{
+  if(m_logDialog == nullptr)
+  {
+    m_logDialog = new LogDialog(&m_logModel, this);
+  }
+
+  m_logDialog->show();
+  m_logDialog->raise();
+  m_logDialog->activateWindow();
 }
 
 void PensieveWindow::ToggleVisibility()
@@ -213,35 +228,50 @@ void PensieveWindow::UpdateSystrayIcon()
 
 void PensieveWindow::UpdateNetworkStatus()
 {
-  QPixmap pixmap;
-  switch(m_networkManager.networkAccessible())
+  static auto status = QNetworkAccessManager::UnknownAccessibility;
+  if(status != m_networkManager.networkAccessible())
   {
-    case QNetworkAccessManager::Accessible:
-    {
-      pixmap = QPixmap(":/psv/connected");
-      break;
-    }
-    case QNetworkAccessManager::NotAccessible:
-    {
-      pixmap = QPixmap(":/psv/disconnected");
-      break;
-    }
-    default:
-    {
-      m_networkStatusLabel.clear();
-      return;
-    }
-  }
+    status = m_networkManager.networkAccessible();
 
-  pixmap = pixmap.scaledToHeight(m_networkStatusLabel.height(),
-    Qt::SmoothTransformation);
-  m_networkStatusLabel.setPixmap(pixmap);
+    QPixmap pixmap;
+    QString statusString;
+    switch(status)
+    {
+      case QNetworkAccessManager::Accessible:
+      {
+        pixmap = QPixmap(":/psv/connected");
+        statusString = tr("connected");
+        break;
+      }
+      case QNetworkAccessManager::NotAccessible:
+      {
+        pixmap = QPixmap(":/psv/disconnected");
+        statusString = tr("disconnected");
+        break;
+      }
+      default:
+      {
+        statusString = tr("unknown");
+        m_networkStatusLabel.clear();
+        break;
+      }
+    }
+
+    if(pixmap.isNull() == false)
+    {
+      pixmap = pixmap.scaledToHeight(m_networkStatusLabel.height(),
+        Qt::SmoothTransformation);
+      m_networkStatusLabel.setPixmap(pixmap);
+    }
+    Log(tr("Network status changed to: %1").arg(statusString));
+  }
 }
 
 void PensieveWindow::DownloadData()
 {
   SetReadOnly(true);
   m_networkManager.get(QNetworkRequest(m_server));
+  Log(tr("Send GET request to %1").arg(m_server.toString()));
 }
 
 void PensieveWindow::UploadData()
@@ -249,21 +279,33 @@ void PensieveWindow::UploadData()
   SetReadOnly(true);
   m_networkManager.put(QNetworkRequest(m_server),
     QByteArray(m_pensieveWidget.GetPensieve().ToJSON().c_str()));
+  Log(tr("Send PUT request to %1").arg(m_server.toString()));
 }
 
 void PensieveWindow::EndRequest(QNetworkReply* p_reply)
 {
-  if(p_reply->operation() == QNetworkAccessManager::GetOperation) // GET
+  if(p_reply->error() == QNetworkReply::NoError)
   {
-    Pensieve pensieve;
-    if(Pensieve::FromJSON(p_reply->readAll().data(), pensieve))
+    if(p_reply->operation() == QNetworkAccessManager::GetOperation) // GET
     {
-      m_pensieveWidget.SetPensieve(pensieve);
+      Pensieve pensieve;
+      if(Pensieve::FromJSON(p_reply->readAll().data(), pensieve))
+      {
+        m_pensieveWidget.SetPensieve(pensieve);
+      }
+      else
+      {
+        Log(tr("Invalid pensieve content"));
+      }
+    }
+    else // PUT
+    {
+      DownloadData();
     }
   }
-  else // PUT
+  else
   {
-    DownloadData();
+    Log(tr("Reply: %2").arg(p_reply->errorString()));
   }
 
   SetReadOnly(false);
@@ -303,6 +345,16 @@ void PensieveWindow::StartUpdateTimer()
   {
     m_updateDataTimer.start();
   }
+}
+
+void PensieveWindow::Log(QString const& p_message)
+{
+  QString log = tr("%1: %2")
+    .arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+    .arg(p_message);
+
+  m_logModel.insertRows(m_logModel.rowCount(), 1);
+  m_logModel.setData(m_logModel.index(m_logModel.rowCount() - 1), log);
 }
 
 }

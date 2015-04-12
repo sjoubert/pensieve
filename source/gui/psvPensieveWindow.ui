@@ -40,6 +40,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="m_logAction"/>
+    <addaction name="separator"/>
     <addaction name="m_aboutAction"/>
     <addaction name="m_aboutQtAction"/>
    </widget>
@@ -125,6 +127,14 @@
    </property>
    <property name="toolTip">
     <string>Information about the application</string>
+   </property>
+  </action>
+  <action name="m_logAction">
+   <property name="text">
+    <string>Log window</string>
+   </property>
+   <property name="toolTip">
+    <string>Display the application logs</string>
    </property>
   </action>
  </widget>
