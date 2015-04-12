@@ -21,10 +21,10 @@ if(PSV_BUILD_SERVER)
 endif()
 
 cmake_dependent_option(PSV_BUILD_GUI "Build pensieve graphical interface" ON "PSV_BUILD_LIBRARY" OFF)
-# By default, use Qt4 instead of Qt5 since QSystemTrayIcon is currently broken there
+# Allow Qt4 to be used instead of Qt5, to work around some bugs in MATE desktop
 # May be fixed in 5.4.2 and/or 5.5
 # See https://bugreports.qt.io/browse/QTBUG-32811
-cmake_dependent_option(PSV_USE_QT5 "Use Qt5 to build the graphical interface (default is Qt4)" OFF "PSV_BUILD_GUI" OFF)
+cmake_dependent_option(PSV_USE_QT4 "Use Qt4 to build the graphical interface (default is Qt5)" OFF "PSV_BUILD_GUI" OFF)
 if(PSV_BUILD_GUI)
   message(STATUS "Configuring graphical interface")
   add_subdirectory(gui)
