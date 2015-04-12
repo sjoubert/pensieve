@@ -13,6 +13,9 @@
   <property name="contextMenuPolicy">
    <enum>Qt::NoContextMenu</enum>
   </property>
+  <property name="windowTitle">
+   <string>QPensieve</string>
+  </property>
   <widget class="QMenuBar" name="m_menuBar">
    <property name="geometry">
     <rect>
