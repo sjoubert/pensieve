@@ -286,11 +286,13 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
 {
   if(p_reply->error() == QNetworkReply::NoError)
   {
+    static QString const succeededLog = tr("Request succeeded");
     if(p_reply->operation() == QNetworkAccessManager::GetOperation) // GET
     {
       Pensieve pensieve;
       if(Pensieve::FromJSON(p_reply->readAll().data(), pensieve))
       {
+        Log(succeededLog);
         m_pensieveWidget.SetPensieve(pensieve);
       }
       else
@@ -300,12 +302,13 @@ void PensieveWindow::EndRequest(QNetworkReply* p_reply)
     }
     else // PUT
     {
+      Log(succeededLog);
       DownloadData();
     }
   }
   else
   {
-    Log(tr("Reply: %2").arg(p_reply->errorString()));
+    Log(tr("Request failed: %2").arg(p_reply->errorString()));
   }
 
   SetReadOnly(false);
