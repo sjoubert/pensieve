@@ -224,6 +224,8 @@ void PensieveWindow::UpdateSystrayIcon()
   }
 
   m_systrayIcon.setIcon(QIcon(image));
+  m_systrayIcon.setToolTip(tr("%n thought(s) on filter '%1'", nullptr, count)
+    .arg(m_pensieveWidget.GetFlagsFilter().pattern()));
 }
 
 void PensieveWindow::UpdateNetworkStatus()
