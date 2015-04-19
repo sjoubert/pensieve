@@ -174,7 +174,7 @@ void PensieveWindow::About()
     "    MazeNL77 (Peter) <http://mazenl77.deviantart.com>\n"
   );
 
-  QMessageBox::about(this, tr("About"),
+  QMessageBox::about(this, tr("About - QPensieve"),
     text.arg(QString::fromStdString(PENSIEVE_VERSION)));
 }
 
