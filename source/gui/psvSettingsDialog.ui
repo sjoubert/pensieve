@@ -22,17 +22,17 @@
       <widget class="QLineEdit" name="m_server"/>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="m_flagsFilterLabel">
+      <widget class="QLabel" name="m_tagsFilterLabel">
        <property name="text">
-        <string>Flags filter:</string>
+        <string>Tags filter:</string>
        </property>
        <property name="buddy">
-        <cstring>m_flagsFilter</cstring>
+        <cstring>m_tagsFilter</cstring>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="m_flagsFilter"/>
+      <widget class="QLineEdit" name="m_tagsFilter"/>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="m_updateIntervalLabel">
@@ -70,7 +70,7 @@
  </widget>
  <tabstops>
   <tabstop>m_server</tabstop>
-  <tabstop>m_flagsFilter</tabstop>
+  <tabstop>m_tagsFilter</tabstop>
   <tabstop>m_updateInterval</tabstop>
   <tabstop>m_startHidden</tabstop>
  </tabstops>

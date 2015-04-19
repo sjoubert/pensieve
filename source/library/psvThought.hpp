@@ -63,30 +63,30 @@ public:
   std::string const& GetContent() const;
 
   /**
-   * Add a flag to the though
-   * @param p_flag New flag
+   * Add a tag to the though
+   * @param p_tag New tag
    */
-  void AddFlag(std::string const& p_flag);
+  void AddTag(std::string const& p_tag);
 
   /**
-   * Remove a flag from the thought
-   * @param p_flag Flag to remove
+   * Remove a tag from the thought
+   * @param p_tag Tag to remove
    */
-  void RemoveFlag(std::string const& p_flag);
+  void RemoveTag(std::string const& p_tag);
 
   /**
-   * Get the flags
-   * @return Collection of the current flags
+   * Get the tags
+   * @return Collection of the current tags
    */
-  std::set<std::string> const& GetFlags() const;
+  std::set<std::string> const& GetTags() const;
 
 private:
   /// Title, destined to be a summary/short text
   std::string m_title;
   /// Content
   std::string m_content;
-  /// Collection of associated flags
-  std::set<std::string> m_flags;
+  /// Collection of associated tags
+  std::set<std::string> m_tags;
 };
 
 }

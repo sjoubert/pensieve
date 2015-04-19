@@ -60,19 +60,19 @@ public:
   void resizeEvent(QResizeEvent* p_event) override;
 
   /**
-   * Set the flags filter regex
-   * @param p_filter Flags filter
+   * Set the tags filter regex
+   * @param p_filter Tags filter
    */
-  void SetFlagsFilter(QRegExp const& p_filter);
+  void SetTagsFilter(QRegExp const& p_filter);
 
   /**
-   * Get the flags filter regex
-   * @return Flags filter
+   * Get the tags filter regex
+   * @return Tags filter
    */
-  QRegExp const& GetFlagsFilter() const;
+  QRegExp const& GetTagsFilter() const;
 
   /**
-   * Get the number of thoughts matching the flags filter
+   * Get the number of thoughts matching the tags filter
    * @return The number of highlighted thoughts
    */
   unsigned int GetHighlightedCount() const;
@@ -138,8 +138,8 @@ private:
   QSignalMapper m_startEditionMapper;
   /// Mapper for deletion signal
   QSignalMapper m_deletionMapper;
-  /// Flags filter
-  QRegExp m_flagsFilter;
+  /// Tags filter
+  QRegExp m_tagsFilter;
 };
 
 }

@@ -30,8 +30,8 @@ public:
   {
     /// Server address
     static QString const SERVER;
-    /// Regex filter for flags
-    static QString const FLAGS_FILTER;
+    /// Regex filter for tags
+    static QString const TAGS_FILTER;
     /// Data download interval
     static QString const UPDATE_INTERVAL;
     /// Start the application hidden in the systray
@@ -66,16 +66,16 @@ public:
   QString GetServer() const;
 
   /**
-   * Set the flags filter regex
-   * @param p_filter Flags filter
+   * Set the tags filter regex
+   * @param p_filter Tags filter
    */
-  void SetFlagsFilter(QRegExp const& p_filter);
+  void SetTagsFilter(QRegExp const& p_filter);
 
   /**
-   * Get the flags filter regex
-   * @return Flags filter
+   * Get the tags filter regex
+   * @return Tags filter
    */
-  QRegExp GetFlagsFilter() const;
+  QRegExp GetTagsFilter() const;
 
   /**
    * Set the update interval

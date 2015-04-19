@@ -15,8 +15,8 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   SetHighlighted(false);
 
   m_contextMenu = new QMenu(this);
-  m_contextMenu->addAction(m_ui->m_addFlagAction);
-  m_contextMenu->addAction(m_ui->m_removeFlagsAction);
+  m_contextMenu->addAction(m_ui->m_addTagAction);
+  m_contextMenu->addAction(m_ui->m_removeTagsAction);
   for(auto action: m_contextMenu->actions())
   {
     action->setStatusTip(action->toolTip());
@@ -29,10 +29,10 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
   connect(m_ui->m_saveButton, SIGNAL(clicked()), SLOT(SetDisplayMode()));
   connect(m_ui->m_saveButton, SIGNAL(clicked()), SIGNAL(EditionEnded()));
   connect(m_ui->m_deleteButton, SIGNAL(clicked()), SIGNAL(DeleteRequested()));
-  connect(m_ui->m_flags, SIGNAL(customContextMenuRequested(QPoint)),
+  connect(m_ui->m_tags, SIGNAL(customContextMenuRequested(QPoint)),
     SLOT(DisplayContextMenu(QPoint)));
-  connect(m_ui->m_addFlagAction, SIGNAL(triggered()), SLOT(AddFlag()));
-  connect(m_ui->m_removeFlagsAction, SIGNAL(triggered()), SLOT(RemoveFlags()));
+  connect(m_ui->m_addTagAction, SIGNAL(triggered()), SLOT(AddTag()));
+  connect(m_ui->m_removeTagsAction, SIGNAL(triggered()), SLOT(RemoveTags()));
 }
 
 ThoughtWidget::~ThoughtWidget() = default;
@@ -43,10 +43,10 @@ Thought ThoughtWidget::GetThought() const
 
   thought.SetTitle(m_ui->m_title->text().toStdString());
   thought.SetContent(m_ui->m_content->toPlainText().toStdString());
-  for(auto i = 0; i < m_ui->m_flags->count(); ++i)
+  for(auto i = 0; i < m_ui->m_tags->count(); ++i)
   {
-    auto item = m_ui->m_flags->item(i);
-    thought.AddFlag(item->text().toStdString());
+    auto item = m_ui->m_tags->item(i);
+    thought.AddTag(item->text().toStdString());
   }
 
   return thought;
@@ -56,10 +56,10 @@ void ThoughtWidget::SetThought(Thought const& p_thought)
 {
   m_ui->m_title->setText(QString::fromStdString(p_thought.GetTitle()));
   m_ui->m_content->setPlainText(QString::fromStdString(p_thought.GetContent()));
-  m_ui->m_flags->clear();
-  for(auto const& flag: p_thought.GetFlags())
+  m_ui->m_tags->clear();
+  for(auto const& tag: p_thought.GetTags())
   {
-    m_ui->m_flags->addItem(QString::fromStdString(flag));
+    m_ui->m_tags->addItem(QString::fromStdString(tag));
   }
 }
 
@@ -98,21 +98,21 @@ void ThoughtWidget::SetDisplayMode(bool p_displayMode)
   m_ui->m_editButton->setVisible(p_displayMode);
   m_ui->m_saveButton->setHidden(p_displayMode);
 
-  if(m_ui->m_flags->count() > 0)
+  if(m_ui->m_tags->count() > 0)
   {
-    auto newFlags = m_ui->m_flags->item(0)->flags();
+    auto newTags = m_ui->m_tags->item(0)->flags();
     if(p_displayMode)
     {
-      newFlags &= ~Qt::ItemIsEditable;
+      newTags &= ~Qt::ItemIsEditable;
     }
     else
     {
-      newFlags |= Qt::ItemIsEditable;
+      newTags |= Qt::ItemIsEditable;
     }
 
-    for(auto i = 0; i < m_ui->m_flags->count(); ++i)
+    for(auto i = 0; i < m_ui->m_tags->count(); ++i)
     {
-      m_ui->m_flags->item(i)->setFlags(newFlags);
+      m_ui->m_tags->item(i)->setFlags(newTags);
     }
   }
 }
@@ -124,24 +124,24 @@ void ThoughtWidget::DisplayContextMenu(QPoint const& p_position)
   // Edit mode
   if(m_ui->m_saveButton->isVisible())
   {
-    m_ui->m_removeFlagsAction->setDisabled(
-      m_ui->m_flags->selectedItems().empty());
+    m_ui->m_removeTagsAction->setDisabled(
+      m_ui->m_tags->selectedItems().empty());
     m_contextMenu->exec(QCursor::pos());
   }
 }
 
-void ThoughtWidget::AddFlag()
+void ThoughtWidget::AddTag()
 {
-  auto newItem = new QListWidgetItem(tr("<new flag>"));
+  auto newItem = new QListWidgetItem(tr("<new tag>"));
   newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
-  m_ui->m_flags->addItem(newItem);
-  m_ui->m_flags->editItem(newItem);
+  m_ui->m_tags->addItem(newItem);
+  m_ui->m_tags->editItem(newItem);
 }
 
-void ThoughtWidget::RemoveFlags()
+void ThoughtWidget::RemoveTags()
 {
   // Just delete the items the list widget will be cleaned automatically
-  for(auto toRemove: m_ui->m_flags->selectedItems())
+  for(auto toRemove: m_ui->m_tags->selectedItems())
   {
     delete toRemove;
   }

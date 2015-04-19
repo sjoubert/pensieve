@@ -73,8 +73,8 @@ private:
   static std::string const JSON_TITLE;
   /// JSON key for content
   static std::string const JSON_CONTENT;
-  /// JSON key for flags
-  static std::string const JSON_FLAGS;
+  /// JSON key for tags
+  static std::string const JSON_TAGS;
 
   /// Collection of thoughts
   std::vector<Thought> m_thoughts;

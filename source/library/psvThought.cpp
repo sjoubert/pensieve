@@ -31,19 +31,19 @@ std::string const& Thought::GetContent() const
   return m_content;
 }
 
-void Thought::AddFlag(std::string const& p_flag)
+void Thought::AddTag(std::string const& p_tag)
 {
-  m_flags.insert(p_flag);
+  m_tags.insert(p_tag);
 }
 
-void Thought::RemoveFlag(std::string const& p_flag)
+void Thought::RemoveTag(std::string const& p_tag)
 {
-  m_flags.erase(p_flag);
+  m_tags.erase(p_tag);
 }
 
-std::set<std::string> const& Thought::GetFlags() const
+std::set<std::string> const& Thought::GetTags() const
 {
-  return m_flags;
+  return m_tags;
 }
 
 }

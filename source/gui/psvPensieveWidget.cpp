@@ -76,16 +76,16 @@ void PensieveWidget::resizeEvent(QResizeEvent* p_event)
   LayoutWidgets();
 }
 
-void PensieveWidget::SetFlagsFilter(QRegExp const& p_filter)
+void PensieveWidget::SetTagsFilter(QRegExp const& p_filter)
 {
-  m_flagsFilter = p_filter;
+  m_tagsFilter = p_filter;
   // Update highlighted thoughts
   SetPensieve(GetPensieve());
 }
 
-QRegExp const& PensieveWidget::GetFlagsFilter() const
+QRegExp const& PensieveWidget::GetTagsFilter() const
 {
-  return m_flagsFilter;
+  return m_tagsFilter;
 }
 
 unsigned int PensieveWidget::GetHighlightedCount() const
@@ -168,15 +168,15 @@ void PensieveWidget::LayoutWidgets()
 
 bool PensieveWidget::ShouldBeHighlighted(Thought const& p_thought) const
 {
-  for(auto const& flag: p_thought.GetFlags())
+  for(auto const& tag: p_thought.GetTags())
   {
-    if(m_flagsFilter.indexIn(QString::fromStdString(flag)) != -1)
+    if(m_tagsFilter.indexIn(QString::fromStdString(tag)) != -1)
     {
       return true;
     }
   }
 
-  return m_flagsFilter.pattern().isEmpty();
+  return m_tagsFilter.pattern().isEmpty();
 }
 
 }

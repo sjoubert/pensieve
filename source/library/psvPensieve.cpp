@@ -10,7 +10,7 @@ namespace psv
 std::string const Pensieve::JSON_THOUGHTS = "thoughts";
 std::string const Pensieve::JSON_TITLE = "title";
 std::string const Pensieve::JSON_CONTENT = "content";
-std::string const Pensieve::JSON_FLAGS = "flags";
+std::string const Pensieve::JSON_TAGS = "tags";
 
 Pensieve::Pensieve() = default;
 
@@ -43,10 +43,10 @@ std::string Pensieve::ToJSON() const
     jsonThought[JSON_TITLE] = thought.GetTitle();
     jsonThought[JSON_CONTENT] = thought.GetContent();
 
-    jsonThought[JSON_FLAGS] = Json::arrayValue;
-    for(auto const& flag: thought.GetFlags())
+    jsonThought[JSON_TAGS] = Json::arrayValue;
+    for(auto const& tag: thought.GetTags())
     {
-      jsonThought[JSON_FLAGS].append(flag);
+      jsonThought[JSON_TAGS].append(tag);
     }
 
     json[JSON_THOUGHTS].append(jsonThought);
@@ -82,16 +82,16 @@ bool Pensieve::FromJSON(std::string const& p_json, Pensieve& p_pensieve)
   {
     if(jsonThought.isMember(JSON_TITLE) &&
       jsonThought.isMember(JSON_CONTENT) &&
-      jsonThought.isMember(JSON_FLAGS))
+      jsonThought.isMember(JSON_TAGS))
     {
       Thought thought;
 
       thought.SetTitle(jsonThought[JSON_TITLE].asString());
       thought.SetContent(jsonThought[JSON_CONTENT].asString());
 
-      for(auto const& jsonFlag: jsonThought[JSON_FLAGS])
+      for(auto const& jsonTag: jsonThought[JSON_TAGS])
       {
-        thought.AddFlag(jsonFlag.asString());
+        thought.AddTag(jsonTag.asString());
       }
 
       p_pensieve.GetThoughts().push_back(thought);

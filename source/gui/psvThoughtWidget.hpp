@@ -89,25 +89,25 @@ private Q_SLOTS:
   void SetDisplayMode(bool p_displayMode = true);
 
   /**
-   * Display custom context menu for the flags widget
+   * Display custom context menu for the tags widget
    * @param p_position Requested position of the menu
    */
   void DisplayContextMenu(QPoint const& p_position);
 
   /**
-   * Add a new flag to the flag list
+   * Add a new tag to the tag list
    */
-  void AddFlag();
+  void AddTag();
 
   /**
-   * Remove the selected flags from the flag list
+   * Remove the selected tags from the tag list
    */
-  void RemoveFlags();
+  void RemoveTags();
 
 private:
   /// Widget UI
   std::unique_ptr<Ui::ThoughtWidget> m_ui;
-  /// Flags context menu
+  /// Tags context menu
   QMenu* m_contextMenu;
 };
 

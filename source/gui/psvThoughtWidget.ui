@@ -19,7 +19,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QListWidget" name="m_flags">
+         <widget class="QListWidget" name="m_tags">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
@@ -72,27 +72,27 @@
     </widget>
    </item>
   </layout>
-  <action name="m_addFlagAction">
+  <action name="m_addTagAction">
    <property name="text">
     <string>Add</string>
    </property>
    <property name="toolTip">
-    <string>Add a new flag</string>
+    <string>Add a new tag</string>
    </property>
   </action>
-  <action name="m_removeFlagsAction">
+  <action name="m_removeTagsAction">
    <property name="text">
     <string>Remove</string>
    </property>
    <property name="toolTip">
-    <string>Remove selected flag</string>
+    <string>Remove selected tag</string>
    </property>
   </action>
  </widget>
  <tabstops>
   <tabstop>m_title</tabstop>
   <tabstop>m_content</tabstop>
-  <tabstop>m_flags</tabstop>
+  <tabstop>m_tags</tabstop>
   <tabstop>m_deleteButton</tabstop>
   <tabstop>m_editButton</tabstop>
   <tabstop>m_saveButton</tabstop>

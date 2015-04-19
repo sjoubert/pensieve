@@ -6,7 +6,7 @@ namespace psv
 {
 
 QString const SettingsDialog::Settings::SERVER = "server";
-QString const SettingsDialog::Settings::FLAGS_FILTER = "flags_filter";
+QString const SettingsDialog::Settings::TAGS_FILTER = "tags_filter";
 QString const SettingsDialog::Settings::UPDATE_INTERVAL = "update_interval";
 QString const SettingsDialog::Settings::START_HIDDEN = "start_hidden";
 
@@ -29,14 +29,14 @@ QString SettingsDialog::GetServer() const
   return m_ui->m_server->text();
 }
 
-void SettingsDialog::SetFlagsFilter(QRegExp const& p_filter)
+void SettingsDialog::SetTagsFilter(QRegExp const& p_filter)
 {
-  m_ui->m_flagsFilter->setText(p_filter.pattern());
+  m_ui->m_tagsFilter->setText(p_filter.pattern());
 }
 
-QRegExp SettingsDialog::GetFlagsFilter() const
+QRegExp SettingsDialog::GetTagsFilter() const
 {
-  return QRegExp(m_ui->m_flagsFilter->text());
+  return QRegExp(m_ui->m_tagsFilter->text());
 }
 
 void SettingsDialog::SetUpdateInterval(int p_msec)

@@ -56,8 +56,8 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   QApplication::setOrganizationName("qpensieve");
   QSettings settings;
   m_server = settings.value(SettingsDialog::Settings::SERVER, "").toUrl();
-  m_pensieveWidget.SetFlagsFilter(
-    settings.value(SettingsDialog::Settings::FLAGS_FILTER, "").toRegExp());
+  m_pensieveWidget.SetTagsFilter(
+    settings.value(SettingsDialog::Settings::TAGS_FILTER, "").toRegExp());
 
   m_systrayIcon.setContextMenu(systrayMenu);
   UpdateSystrayIcon();
@@ -115,7 +115,7 @@ void PensieveWindow::DisplaySettings()
   // Initialize dialog with current values
   SettingsDialog dialog(this);
   dialog.SetServer(m_server.toString());
-  dialog.SetFlagsFilter(m_pensieveWidget.GetFlagsFilter());
+  dialog.SetTagsFilter(m_pensieveWidget.GetTagsFilter());
   dialog.SetUpdateInterval(m_updateDataTimer.interval());
   dialog.SetStartHidden(
     settings.value(SettingsDialog::Settings::START_HIDDEN, false).toBool());
@@ -130,13 +130,13 @@ void PensieveWindow::DisplaySettings()
     m_updateDataTimer.stop();
     m_updateDataTimer.setInterval(dialog.GetUpdateInterval());
     StartUpdateTimer();
-    m_pensieveWidget.SetFlagsFilter(dialog.GetFlagsFilter());
+    m_pensieveWidget.SetTagsFilter(dialog.GetTagsFilter());
     UpdateSystrayIcon();
 
     // In settings
     settings.setValue(SettingsDialog::Settings::SERVER, m_server);
     settings.setValue(
-      SettingsDialog::Settings::FLAGS_FILTER, dialog.GetFlagsFilter());
+      SettingsDialog::Settings::TAGS_FILTER, dialog.GetTagsFilter());
     settings.setValue(
       SettingsDialog::Settings::UPDATE_INTERVAL, dialog.GetUpdateInterval());
     settings.setValue(
@@ -225,7 +225,7 @@ void PensieveWindow::UpdateSystrayIcon()
 
   m_systrayIcon.setIcon(QIcon(image));
   m_systrayIcon.setToolTip(tr("%n thought(s) on filter '%1'", nullptr, count)
-    .arg(m_pensieveWidget.GetFlagsFilter().pattern()));
+    .arg(m_pensieveWidget.GetTagsFilter().pattern()));
 }
 
 void PensieveWindow::UpdateNetworkStatus()
