@@ -39,9 +39,25 @@ public:
 
   LogDialog& operator=(LogDialog const&) = delete;
 
+private Q_SLOTS:
+  /**
+   * Save the scroll bar position
+   */
+  void SaveScrollBarPosition();
+
+  /**
+   * Update the scroll bar position to follow the last log if needed
+   *
+   * The scroll bar position is only updated if it was already displaying the
+   * last log before the last log update, otherwise it is left unchanged.
+   */
+  void UpdateScrollBarPosition();
+
 private:
   /// Widget UI
   std::unique_ptr<Ui::LogDialog> m_ui;
+  /// Was the scroll bar at the maximum position before the last log addition
+  bool m_scrollBarAtMaximum;
 };
 
 }
