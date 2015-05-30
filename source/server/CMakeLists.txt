@@ -1,15 +1,14 @@
 find_package(Boost COMPONENTS program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
 find_package(Microhttpd REQUIRED)
-include_directories(${MICROHTTPD_INCLUDE_DIRS})
 
+add_executable(pensieved
+  main.cpp
+  psvServer.cpp
+  psvServer.hpp
+)
 if(UNIX)
-  add_definitions(-DPSV_POSIX)
+  target_compile_definitions(pensieved PRIVATE PSV_POSIX)
 endif()
-
-file(GLOB source_files "*.?pp")
-add_executable(pensieved ${source_files})
-target_link_libraries(pensieved ${MICROHTTPD_LIBRARIES} ${Boost_LIBRARIES} pensieve)
+target_include_directories(pensieved PRIVATE ${MICROHTTPD_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+target_link_libraries(pensieved PRIVATE ${MICROHTTPD_LIBRARIES} ${Boost_LIBRARIES} pensieve)
 install(TARGETS pensieved DESTINATION bin)

@@ -1,6 +1,4 @@
 find_package(Boost COMPONENTS program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
 
 if(PSV_USE_QT4)
   find_package(Qt4 COMPONENTS QtGui QtNetwork REQUIRED)
@@ -14,20 +12,33 @@ else()
   set(Qt_VERSION ${Qt5_VERSION})
 endif()
 
+add_executable(qpensieve
+  main.cpp
+  psvLogDialog.cpp
+  psvLogDialog.hpp
+  psvLogDialog.ui
+  psvPensieveWidget.cpp
+  psvPensieveWidget.hpp
+  psvPensieveWidget.ui
+  psvPensieveWindow.cpp
+  psvPensieveWindow.hpp
+  psvPensieveWindow.ui
+  psvSettingsDialog.cpp
+  psvSettingsDialog.hpp
+  psvSettingsDialog.ui
+  psvThoughtWidget.cpp
+  psvThoughtWidget.hpp
+  psvThoughtWidget.ui
+  res/resources.qrc
+)
+set_target_properties(qpensieve PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON)
 # The Q_OBJECT macro comes with virtual methods not marked 'override'
 # With Clang >= 3.6 -Wno-inconsistent-missing-override is triggered when
 # some virtual methods of a class are marked 'override' while others are not
 # This should be fixed in Qt 5.5, commit 3092bd56c394f22e027be59368789546afb5ca98
 if(${Qt_VERSION} VERSION_LESS 5.5 AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "-Wno-inconsistent-missing-override ${CMAKE_CXX_FLAGS}")
+  target_compile_options(qpensieve PRIVATE "-Wno-inconsistent-missing-override")
 endif()
-
-file(GLOB_RECURSE source_files "*.?pp" "*.ui" "*.qrc")
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-add_executable(qpensieve ${source_files})
-target_link_libraries(qpensieve ${qtLibrary} ${Boost_LIBRARIES} pensieve)
+target_include_directories(qpensieve PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS})
+target_link_libraries(qpensieve PRIVATE ${qtLibrary} ${Boost_LIBRARIES} pensieve)
 install(TARGETS qpensieve DESTINATION bin)

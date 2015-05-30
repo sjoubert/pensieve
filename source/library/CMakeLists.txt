@@ -1,6 +1,10 @@
 find_package(Jsoncpp REQUIRED)
-include_directories(${JSONCPP_INCLUDE_DIRS})
 
-file(GLOB source_files "*.?pp")
-add_library(pensieve STATIC ${source_files})
-target_link_libraries(pensieve ${JSONCPP_LIBRARIES})
+add_library(pensieve STATIC
+  psvPensieve.cpp
+  psvPensieve.hpp
+  psvThought.cpp
+  psvThought.hpp
+)
+target_include_directories(pensieve PRIVATE ${JSONCPP_INCLUDE_DIRS})
+target_link_libraries(pensieve PRIVATE ${JSONCPP_LIBRARIES})
