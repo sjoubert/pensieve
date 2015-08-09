@@ -4,6 +4,9 @@ Changelog
 Master
 ------
 
+Version 0.8
+-----------
+
 * Follow the last log in the logging widget of the Qt GUI application
 * Add a changelog file
 
