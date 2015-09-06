@@ -91,8 +91,9 @@ QRegExp const& PensieveWidget::GetTagsFilter() const
 unsigned int PensieveWidget::GetHighlightedCount() const
 {
   auto thoughts = GetPensieve().GetThoughts();
+  using namespace  std::placeholders;
   return std::count_if(thoughts.begin(), thoughts.end(),
-    [this](auto const& p_thought) { return ShouldBeHighlighted(p_thought); });
+    std::bind(&PensieveWidget::ShouldBeHighlighted, this, _1));
 }
 
 void PensieveWidget::CreateThought()
