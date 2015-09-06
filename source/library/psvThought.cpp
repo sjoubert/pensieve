@@ -5,11 +5,11 @@ namespace psv
 
 Thought::Thought() = default;
 
-Thought::Thought(Thought const& p_other) = default;
+Thought::Thought(Thought const&) = default;
 
 Thought::~Thought() = default;
 
-Thought& Thought::operator=(Thought const& p_other) = default;
+Thought& Thought::operator=(Thought const&) = default;
 
 void Thought::SetTitle(std::string const& p_title)
 {

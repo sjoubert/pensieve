@@ -14,11 +14,11 @@ std::string const Pensieve::JSON_TAGS = "tags";
 
 Pensieve::Pensieve() = default;
 
-Pensieve::Pensieve(Pensieve const& p_other) = default;
+Pensieve::Pensieve(Pensieve const&) = default;
 
 Pensieve::~Pensieve() = default;
 
-Pensieve& Pensieve::operator=(Pensieve const& p_other) = default;
+Pensieve& Pensieve::operator=(Pensieve const&) = default;
 
 std::vector<Thought> const& Pensieve::GetThoughts() const
 {
