@@ -63,31 +63,38 @@ PensieveWindow::PensieveWindow(QWidget* p_parent):
   UpdateSystrayIcon();
   m_systrayIcon.show();
 
-  connect(m_ui->m_addThoughtAction, SIGNAL(triggered()),
-    &m_pensieveWidget, SLOT(CreateThought()));
-  connect(m_ui->m_downloadDataAction, SIGNAL(triggered()),
-    SLOT(DownloadData()));
-  connect(m_ui->m_uploadDataAction, SIGNAL(triggered()),
-    SLOT(UploadData()));
-  connect(m_ui->m_settingsAction, SIGNAL(triggered()), SLOT(DisplaySettings()));
-  connect(m_ui->m_toggleVisibilityAction, SIGNAL(triggered()),
-    SLOT(ToggleVisibility()));
-  connect(m_ui->m_quitAction, SIGNAL(triggered()),
-    QApplication::instance(), SLOT(quit()));
-  connect(m_ui->m_logAction, SIGNAL(triggered()), SLOT(DisplayLog()));
-  connect(m_ui->m_aboutAction, SIGNAL(triggered()), SLOT(About()));
-  connect(m_ui->m_aboutQtAction, SIGNAL(triggered()),
-    QApplication::instance(), SLOT(aboutQt()));
-  connect(&m_systrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-    SLOT(SystrayActivated(QSystemTrayIcon::ActivationReason)));
-  connect(&m_pensieveWidget, SIGNAL(Modified()), SLOT(UpdateSystrayIcon()));
-  connect(&m_networkManager, SIGNAL(finished(QNetworkReply*)),
-    SLOT(EndRequest(QNetworkReply*)));
-  connect(&m_pensieveWidget, SIGNAL(EditionStarted()), SLOT(StartEdition()));
-  connect(&m_pensieveWidget, SIGNAL(EditionEnded()), SLOT(EndEdition()));
-  connect(&m_networkStatusTimer, SIGNAL(timeout()),
-    SLOT(UpdateNetworkStatus()));
-  connect(&m_updateDataTimer, SIGNAL(timeout()), SLOT(DownloadData()));
+  connect(m_ui->m_addThoughtAction, &QAction::triggered,
+    &m_pensieveWidget, &PensieveWidget::CreateThought);
+  connect(m_ui->m_downloadDataAction, &QAction::triggered,
+    this, &PensieveWindow::DownloadData);
+  connect(m_ui->m_uploadDataAction, &QAction::triggered,
+    this, &PensieveWindow::UploadData);
+  connect(m_ui->m_settingsAction, &QAction::triggered,
+    this, &PensieveWindow::DisplaySettings);
+  connect(m_ui->m_toggleVisibilityAction, &QAction::triggered,
+    this, &PensieveWindow::ToggleVisibility);
+  connect(m_ui->m_quitAction, &QAction::triggered,
+    QApplication::instance(), &QApplication::quit);
+  connect(m_ui->m_logAction, &QAction::triggered,
+    this, &PensieveWindow::DisplayLog);
+  connect(m_ui->m_aboutAction, &QAction::triggered,
+    this, &PensieveWindow::About);
+  connect(m_ui->m_aboutQtAction, &QAction::triggered,
+    QApplication::instance(), &QApplication::aboutQt);
+  connect(&m_systrayIcon, &QSystemTrayIcon::activated,
+    this, &PensieveWindow::SystrayActivated);
+  connect(&m_pensieveWidget, &PensieveWidget::Modified,
+    this, &PensieveWindow::UpdateSystrayIcon);
+  connect(&m_networkManager, &QNetworkAccessManager::finished,
+    this, &PensieveWindow::EndRequest);
+  connect(&m_pensieveWidget, &PensieveWidget::EditionStarted,
+    this, &PensieveWindow::StartEdition);
+  connect(&m_pensieveWidget, &PensieveWidget::EditionEnded,
+    this, &PensieveWindow::EndEdition);
+  connect(&m_networkStatusTimer, &QTimer::timeout,
+    this, &PensieveWindow::UpdateNetworkStatus);
+  connect(&m_updateDataTimer, &QTimer::timeout,
+    this, &PensieveWindow::DownloadData);
 
   // Setup network status
   UpdateNetworkStatus();

@@ -14,10 +14,10 @@ LogDialog::LogDialog(QAbstractItemModel* p_model, QWidget* p_parent):
 {
   m_ui->setupUi(this);
   m_ui->m_logView->setModel(p_model);
-  connect(p_model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-    SLOT(SaveScrollBarPosition()));
-  connect(p_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-    SLOT(UpdateScrollBarPosition()));
+  connect(p_model, &QAbstractItemModel::rowsAboutToBeInserted,
+    this, &LogDialog::SaveScrollBarPosition);
+  connect(p_model, &QAbstractItemModel::rowsInserted,
+    this, &LogDialog::UpdateScrollBarPosition);
 }
 
 LogDialog::~LogDialog() = default;

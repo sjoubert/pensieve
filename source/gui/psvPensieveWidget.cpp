@@ -59,7 +59,8 @@ void PensieveWidget::SetPensieve(Pensieve const& p_pensieve)
     m_startEditionMapper.setMapping(thoughtWidget, thoughtWidget);
     connect(thoughtWidget, SIGNAL(EditionStarted()),
       &m_startEditionMapper, SLOT(map()));
-    connect(thoughtWidget, SIGNAL(EditionEnded()), SLOT(EndEdition()));
+    connect(thoughtWidget, &ThoughtWidget::EditionEnded,
+      this, &PensieveWidget::EndEdition);
     m_deletionMapper.setMapping(thoughtWidget, thoughtWidget);
     connect(thoughtWidget, SIGNAL(DeleteRequested()),
       &m_deletionMapper, SLOT(map()));

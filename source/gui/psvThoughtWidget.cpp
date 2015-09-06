@@ -24,15 +24,22 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
 
   SetDisplayMode();
 
-  connect(m_ui->m_editButton, SIGNAL(clicked()), SLOT(SetEditMode()));
-  connect(m_ui->m_editButton, SIGNAL(clicked()), SIGNAL(EditionStarted()));
-  connect(m_ui->m_saveButton, SIGNAL(clicked()), SLOT(SetDisplayMode()));
-  connect(m_ui->m_saveButton, SIGNAL(clicked()), SIGNAL(EditionEnded()));
-  connect(m_ui->m_deleteButton, SIGNAL(clicked()), SIGNAL(DeleteRequested()));
-  connect(m_ui->m_tags, SIGNAL(customContextMenuRequested(QPoint)),
-    SLOT(DisplayContextMenu(QPoint)));
-  connect(m_ui->m_addTagAction, SIGNAL(triggered()), SLOT(AddTag()));
-  connect(m_ui->m_removeTagsAction, SIGNAL(triggered()), SLOT(RemoveTags()));
+  connect(m_ui->m_editButton, &QPushButton::clicked,
+    this, &ThoughtWidget::SetEditMode);
+  connect(m_ui->m_editButton, &QPushButton::clicked,
+    this, &ThoughtWidget::EditionStarted);
+  connect(m_ui->m_saveButton, &QPushButton::clicked,
+    this, &ThoughtWidget::SetDisplayMode);
+  connect(m_ui->m_saveButton, &QPushButton::clicked,
+    this, &ThoughtWidget::EditionEnded);
+  connect(m_ui->m_deleteButton, &QPushButton::clicked,
+    this, &ThoughtWidget::DeleteRequested);
+  connect(m_ui->m_tags, &QWidget::customContextMenuRequested,
+    this, &ThoughtWidget::DisplayContextMenu);
+  connect(m_ui->m_addTagAction, &QAction::triggered,
+    this, &ThoughtWidget::AddTag);
+  connect(m_ui->m_removeTagsAction, &QAction::triggered,
+    this, &ThoughtWidget::RemoveTags);
 }
 
 ThoughtWidget::~ThoughtWidget() = default;
