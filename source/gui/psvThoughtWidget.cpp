@@ -24,12 +24,12 @@ ThoughtWidget::ThoughtWidget(QWidget* p_parent):
 
   SetDisplayMode();
 
-  connect(m_ui->m_editButton, &QPushButton::clicked,
-    this, &ThoughtWidget::SetEditMode);
+  connect(m_ui->m_editButton, SIGNAL(clicked()),
+    this, SLOT(SetEditMode()));
   connect(m_ui->m_editButton, &QPushButton::clicked,
     this, &ThoughtWidget::EditionStarted);
-  connect(m_ui->m_saveButton, &QPushButton::clicked,
-    this, &ThoughtWidget::SetDisplayMode);
+  connect(m_ui->m_saveButton, SIGNAL(clicked()),
+    this, SLOT(SetDisplayMode()));
   connect(m_ui->m_saveButton, &QPushButton::clicked,
     this, &ThoughtWidget::EditionEnded);
   connect(m_ui->m_deleteButton, &QPushButton::clicked,
