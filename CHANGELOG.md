@@ -4,6 +4,12 @@ Changelog
 Master
 ------
 
+Version 0.9
+-----------
+
+* Drop Qt 4 support
+* Small fixes
+
 Version 0.8
 -----------
 
