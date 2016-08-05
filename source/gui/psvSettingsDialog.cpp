@@ -41,16 +41,12 @@ QRegExp SettingsDialog::GetTagsFilter() const
 
 void SettingsDialog::SetUpdateInterval(int p_msec)
 {
-  /// @todo When dropping support for Qt4
-  /// Replace addMSecs with fromMSecsSinceStartOfDay()
-  m_ui->m_updateInterval->setTime(QTime(0, 0).addMSecs(p_msec));
+  m_ui->m_updateInterval->setTime(QTime::fromMSecsSinceStartOfDay(p_msec));
 }
 
 int SettingsDialog::GetUpdateInterval() const
 {
-  /// @todo When dropping support for Qt4
-  /// Replace msecsTo with msecsSinceStartOfDay()
-  return - m_ui->m_updateInterval->time().msecsTo(QTime(0, 0));
+  return m_ui->m_updateInterval->time().msecsSinceStartOfDay();
 }
 
 void SettingsDialog::SetStartHidden(bool p_startHidden)
