@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(pensieve LANGUAGES CXX VERSION 0.9)
+project(pensieve LANGUAGES CXX VERSION 0.10)
 
 # Update CMake module path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
