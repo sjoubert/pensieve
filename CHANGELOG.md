@@ -4,6 +4,8 @@ Changelog
 Master
 ------
 
+* Bump minimum CMake version to 3.1
+
 Version 0.9
 -----------
 
