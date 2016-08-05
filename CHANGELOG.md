@@ -4,7 +4,7 @@ Changelog
 Master
 ------
 
-* Bump minimum CMake version to 3.1
+* Bump minimum CMake version to 3.5
 * Bump minimum Qt version to 5.5
 
 Version 0.9

@@ -23,6 +23,6 @@ add_executable(qpensieve
   res/resources.qrc
 )
 set_target_properties(qpensieve PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON)
-target_include_directories(qpensieve PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS})
-target_link_libraries(qpensieve PRIVATE Qt5::Widgets Qt5::Network ${Boost_LIBRARIES} pensieve)
+target_include_directories(qpensieve PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(qpensieve PRIVATE Qt5::Widgets Qt5::Network Boost::program_options pensieve)
 install(TARGETS qpensieve DESTINATION bin)

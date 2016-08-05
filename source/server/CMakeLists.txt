@@ -9,6 +9,6 @@ add_executable(pensieved
 if(UNIX)
   target_compile_definitions(pensieved PRIVATE PSV_POSIX)
 endif()
-target_include_directories(pensieved PRIVATE ${MICROHTTPD_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-target_link_libraries(pensieved PRIVATE ${MICROHTTPD_LIBRARIES} ${Boost_LIBRARIES} pensieve)
+target_include_directories(pensieved PRIVATE ${MICROHTTPD_INCLUDE_DIRS})
+target_link_libraries(pensieved PRIVATE ${MICROHTTPD_LIBRARIES} Boost::program_options pensieve)
 install(TARGETS pensieved DESTINATION bin)
