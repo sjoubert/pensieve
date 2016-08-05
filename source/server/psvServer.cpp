@@ -12,7 +12,7 @@ namespace psv
 
 Server::Server(std::string const& p_storageFile):
   m_storageFile(p_storageFile),
-  m_emptyResponse(MHD_create_response_from_data(0, nullptr, MHD_NO, MHD_NO))
+  m_emptyResponse(MHD_create_response_from_buffer(0, nullptr, MHD_RESPMEM_PERSISTENT))
 {
   // Initialize data from storage file
   std::ifstream storageStream(m_storageFile);
@@ -82,9 +82,9 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
   if(p_method == MHD_HTTP_METHOD_GET)
   {
     std::string jsonPensieve = m_pensieve.ToJSON();
-    auto response = MHD_create_response_from_data(
+    auto response = MHD_create_response_from_buffer(
       jsonPensieve.size(), const_cast<char*>(jsonPensieve.c_str()),
-      MHD_NO/*free*/, MHD_YES/*copy*/);
+      MHD_RESPMEM_MUST_COPY);
     auto returnValue = MHD_queue_response(p_connection, MHD_HTTP_OK, response);
     MHD_destroy_response(response);
 
