@@ -72,6 +72,11 @@ private:
     std::string const& p_url, std::string const& p_method,
     std::string const& p_uploadData, void** p_requestInternalData);
 
+  /**
+   * Handler for standard interrupt (SIGINT) signal, stopping the deamon loop
+   */
+  static void InterruptSignal(int);
+
   /// Pensieve instance
   Pensieve m_pensieve;
   /// Storage file
@@ -80,6 +85,8 @@ private:
   std::map<void*, std::string> m_buffers;
   /// Empty response
   MHD_Response* m_emptyResponse;
+  /// Daemon loop sentinel
+  static bool s_running;
 };
 
 }

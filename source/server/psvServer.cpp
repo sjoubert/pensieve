@@ -6,9 +6,12 @@
 #include <fstream>
 #include <string>
 #include <thread>
+#include <csignal>
 
 namespace psv
 {
+
+bool Server::s_running = false;
 
 Server::Server(std::string const& p_storageFile):
   m_storageFile(p_storageFile),
@@ -34,13 +37,16 @@ Server::~Server()
 void Server::Run(unsigned int p_port)
 {
   auto daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, p_port,
-      nullptr, nullptr, ConnectionHandler, this, MHD_OPTION_END);
+    nullptr, nullptr, ConnectionHandler, this, MHD_OPTION_END);
 
-  while(true)
+  s_running = true;
+  std::signal(SIGTERM, &Server::InterruptSignal);
+  while(s_running)
   {
     using namespace std::literals::chrono_literals;
     std::this_thread::sleep_for(100ms);
   }
+  std::signal(SIGTERM, SIG_DFL);
 
   MHD_stop_daemon(daemon);
 }
@@ -132,6 +138,11 @@ int Server::ConnectionHandler(MHD_Connection* p_connection,
       return MHD_queue_response(p_connection, httpCode, m_emptyResponse);
     }
   }
+}
+
+void Server::InterruptSignal(int)
+{
+  s_running = false;
 }
 
 }
